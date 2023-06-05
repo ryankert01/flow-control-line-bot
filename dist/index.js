@@ -96,6 +96,7 @@ function handleEvent(event) {
             const lineUserId = event.source.userId;
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
+            console.log(message);
             if (message[1] === '.') {
                 const chosen = message.charCodeAt(0) - 48;
                 var getUser = yield prisma.user.findUnique({
@@ -103,6 +104,7 @@ function handleEvent(event) {
                         lineId: lineUserId,
                     },
                 });
+                console.log(getUser);
                 if (getUser) {
                     prisma.user.update({
                         where: {
@@ -112,6 +114,7 @@ function handleEvent(event) {
                             prefered_place: chosen,
                         },
                     });
+                    console.log("update successful", chosen);
                 }
             }
             const replyToken = event.replyToken;
@@ -125,3 +128,17 @@ function handleEvent(event) {
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
+try {
+    prisma.user.update({
+        where: {
+            id: 6,
+        },
+        data: {
+            prefered_place: 2,
+        },
+    });
+    console.log('Update operation completed successfully');
+}
+catch (error) {
+    console.error('Error updating the record:', error);
+}

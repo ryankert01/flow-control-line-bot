@@ -106,14 +106,7 @@ async function handleEvent(event: WebhookEvent) {
       });
       console.log(getUser);
       if (getUser) {
-        prisma.user.update({
-          where: {
-            lineId: lineUserId,
-          },
-          data: {
-            prefered_place: chosen,
-          },
-        });
+        updateUser(lineUserId, chosen);
         console.log("update successful", chosen);
       }
     }
@@ -133,3 +126,20 @@ app.listen(3000, () => {
 });
 
 
+async function updateUser(lineId: string, preferredPlace: number): Promise<void> {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        lineId: lineId,
+      },
+      data: {
+        prefered_place: preferredPlace,
+      },
+    });
+    console.log('User updated:', updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}

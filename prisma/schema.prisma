@@ -11,10 +11,10 @@ datasource db {
 }
 
 model User {
-  id             Int     @id @default(autoincrement())
-  lineId         String? @unique
-  prefered_place Int     @default(-1)
-  chose_place    Int     @default(-1)
+  id             Int    @id @default(autoincrement())
+  lineId         String @unique
+  prefered_place Int    @default(-1)
+  chose_place    Int    @default(-1)
 }
 
 model Places {
