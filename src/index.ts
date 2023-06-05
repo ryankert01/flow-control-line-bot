@@ -4,6 +4,7 @@ import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
 import { add_user } from './utils'
 import { send } from 'process';
+import { assert } from 'console';
 
 // global variables
 var dangerous_areas: any[] = []
@@ -33,10 +34,9 @@ app.post('/dangerous', (req, res) => {
   const isDangerous = req.body.is_dangerous;
   const dangerousAreas = req.body.dangerous_areas;
   dangerous_areas = dangerousAreas;
-  if (isDangerous) {
-    sendDangerousAreasMessages();
-  }
+  sendDangerousAreasMessages();
   res.status(200).json({ message: 'Dangerous areas received successfully' });
+  console.log(dangerousAreas);
 });
 
 async function getLineUserIds() {
@@ -47,6 +47,7 @@ async function getLineUserIds() {
 async function sendDangerousAreasMessages() {
   const lineUserIds = await getLineUserIds();
   for (const lineUserId of lineUserIds) {
+    console.log(lineUserId);
     if (!lineUserId) { // impossible
       continue;
     }
