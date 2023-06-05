@@ -1,0 +1,17 @@
+{
+  "name": "line-bot",
+  "version": "1.0.0",
+  "description": "```sh\r conda activate line-bot\r ```",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^7.5.2",
+    "express": "^4.18.2"
+  }
+}
