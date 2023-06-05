@@ -4,7 +4,8 @@
   "description": "```sh\r conda activate line-bot\r ```",
   "main": "app.js",
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "generate": "prisma generate",
+    "start": "npm run generate && tsc && node dist/index.js"
   },
   "keywords": [],
   "author": "",
