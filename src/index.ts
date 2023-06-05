@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
 import { add_user } from './utils'
+import { send } from 'process';
+
+// global variables
+var dangerous_areas: any[] = []
 
 const app = express();
 
@@ -25,6 +29,34 @@ app.post('/webhook', (req, res) => {
     });
 });
 
+app.post('/dangerous', (req, res) => {
+  const isDangerous = req.body.is_dangerous;
+  const dangerousAreas = req.body.dangerous_areas;
+  dangerous_areas = dangerousAreas;
+  if (isDangerous) {
+    sendDangerousAreasMessages();
+  }
+  res.status(200).json({ message: 'Dangerous areas received successfully' });
+});
+
+async function getLineUserIds() {
+  const users = await prisma.user.findMany();
+  return users.map((user) => user.lineId);
+}
+
+async function sendDangerousAreasMessages() {
+  const lineUserIds = await getLineUserIds();
+  for (const lineUserId of lineUserIds) {
+    if (!lineUserId) { // impossible
+      continue;
+    }
+    await client.pushMessage(lineUserId, {
+      type: "text",
+      text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}`
+    });
+  }
+}
+
 const client = new Client(config);
 
 const prisma = new PrismaClient()
@@ -35,7 +67,8 @@ async function handleEvent(event: WebhookEvent) {
   if (event.type === 'follow') {
     const lineUserId = event.source.userId!;
 
-    const current_user = add_user(lineUserId, prisma)
+    const current_user = await add_user(lineUserId, prisma)
+    client.pushMessage(lineUserId, { type: 'text', text: `Your user id is ${current_user}` });
   }
   
   if (event.type === 'message') {
