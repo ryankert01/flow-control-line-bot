@@ -53,7 +53,7 @@ async function updateUser2(lineId: string, evacuationPlace: number, prisma: any)
         lineId: lineId,
       },
       data: {
-        evacuation_place: evacuationPlace,
+        chose_place: evacuationPlace,
       },
     });
     console.log('User updated:', updatedUser);
