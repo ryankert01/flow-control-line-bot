@@ -7,7 +7,7 @@ import { send } from 'process';
 import { assert } from 'console';
 
 // global variables
-var dangerous_areas: any[] = []
+var dangerous_areas: string[] = []
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.post('/dangerous', (req, res) => {
   dangerous_areas = dangerousAreas;
   sendDangerousAreasMessages();
   res.status(200).json({ message: 'Dangerous areas received successfully' });
-  console.log(dangerousAreas);
+  console.log(req.body);
 });
 
 async function getLineUserIds() {
@@ -46,17 +46,35 @@ async function getLineUserIds() {
 
 async function sendDangerousAreasMessages() {
   const lineUserIds = await getLineUserIds();
+  console.log(dangerous_areas);
   for (const lineUserId of lineUserIds) {
-    console.log(lineUserId);
+    console.log("sending warning message to: ", lineUserId);
     if (!lineUserId) { // impossible
       continue;
     }
     await client.pushMessage(lineUserId, {
       type: "text",
-      text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}`
+      text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
+安安，您在哪裡附近呢?:
+1. metro-entry-1
+2. metro-entry-2
+3. bus-station-1
+4. bus-station-2`
     });
   }
 }
+
+async function sendEvacuationMessages(lineUserId: string, chosen: number) {
+  console.log("sending evacuation message to: ", lineUserId);
+  if (!lineUserId) { // impossible
+    return;
+  }
+  await client.pushMessage(lineUserId, {
+    type: "text",
+    text: `You have chosen ${chosen}`
+  });
+}
+
 
 const client = new Client(config);
 
@@ -78,6 +96,14 @@ async function handleEvent(event: WebhookEvent) {
     const current_user = await add_user(lineUserId, prisma)
 
     const message = (event.message as TextEventMessage)?.text;
+    
+    if (message[1] === '.') {
+      const chosen = message.charCodeAt(0) - 48;
+
+    }
+
+
+
     const replyToken = event.replyToken!;
     // Process the received message and prepare a response
     const response = `You selected: ${message}, and your user id is ${current_user}`;

@@ -16,6 +16,9 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const bot_sdk_1 = require("@line/bot-sdk");
 const client_1 = require("@prisma/client");
+const utils_1 = require("./utils");
+// global variables
+var dangerous_areas = [];
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const config = {
@@ -32,6 +35,41 @@ app.post('/webhook', (req, res) => {
         res.status(500).end();
     });
 });
+app.post('/dangerous', (req, res) => {
+    const isDangerous = req.body.is_dangerous;
+    const dangerousAreas = req.body.dangerous_areas;
+    dangerous_areas = dangerousAreas;
+    sendDangerousAreasMessages();
+    res.status(200).json({ message: 'Dangerous areas received successfully' });
+    console.log(req.body);
+});
+function getLineUserIds() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = yield prisma.user.findMany();
+        return users.map((user) => user.lineId);
+    });
+}
+function sendDangerousAreasMessages() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const lineUserIds = yield getLineUserIds();
+        console.log(dangerous_areas);
+        for (const lineUserId of lineUserIds) {
+            console.log("sending warning message to: ", lineUserId);
+            if (!lineUserId) { // impossible
+                continue;
+            }
+            yield client.pushMessage(lineUserId, {
+                type: "text",
+                text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
+選擇離您最近或最方便的疏散點:
+1. metro-entry-1
+2. metro-entry-2
+3. bus-station-1
+4. bus-station-2`
+            });
+        }
+    });
+}
 const client = new bot_sdk_1.Client(config);
 const prisma = new client_1.PrismaClient();
 function handleEvent(event) {
@@ -39,26 +77,16 @@ function handleEvent(event) {
     return __awaiter(this, void 0, void 0, function* () {
         if (event.type === 'follow') {
             const lineUserId = event.source.userId;
-            // Returns an object or null
-            const getUser = yield prisma.user.findUnique({
-                where: {
-                    lineId: lineUserId,
-                },
-            });
-            if (getUser) {
-                const user = yield prisma.user.create({
-                    data: {
-                        lineId: lineUserId,
-                    },
-                });
-                console.log(user);
-            }
+            const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
+            client.pushMessage(lineUserId, { type: 'text', text: `Your user id is ${current_user}` });
         }
         if (event.type === 'message') {
+            const lineUserId = event.source.userId;
+            const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
-            const response = `You selected: ${message}`;
+            const response = `You selected: ${message}, and your user id is ${current_user}`;
             // Send the response back to the user
             return client.replyMessage(replyToken, { type: 'text', text: response });
         }
@@ -67,35 +95,3 @@ function handleEvent(event) {
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const lineUserId = 'test12';
-        // Returns an object or null
-        const getUser = yield prisma.user.findUnique({
-            where: {
-                lineId: lineUserId,
-            },
-        });
-        if (!getUser) {
-            const user = yield prisma.user.create({
-                data: {
-                    lineId: lineUserId,
-                },
-            });
-            console.log(user);
-        }
-        else {
-            console.log('User already exists');
-            console.log(getUser);
-        }
-    });
-}
-main()
-    .then(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield prisma.$disconnect();
-}))
-    .catch((e) => __awaiter(void 0, void 0, void 0, function* () {
-    console.error(e);
-    yield prisma.$disconnect();
-    process.exit(1);
-}));

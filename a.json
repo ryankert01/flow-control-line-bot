@@ -1,0 +1,7 @@
+{
+    "dangerous": "true",
+    "dangerous_area": [
+        "area1",
+        "area2"
+    ]
+}
