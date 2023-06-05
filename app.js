@@ -2,8 +2,8 @@ const express = require('express');
 const { WebhookEvent, Client } = require('@line/bot-sdk');
 
 const config = {
-  channelAccessToken: 'fscVi562vez/vIW0jq8FjYGanUaX3FO4d5vq7tDdYB7AzgiMiO+SeDaVE87hEwWFYblDw8gLwJVrTL5Qe7E6tqCZrwSPjXd2OTO4qdUoG8O+pIQteA5HjIN+xYPSCJ6Lqg+GknQPDH4z1afAUXeFQAdB04t89/1O/w1cDnyilFU=',
-  channelSecret: '2bd0dd733a1bb41a62276223b379f017',
+  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.LINE_CHANNEL_SECRET,
 };
 const app = express();
 
