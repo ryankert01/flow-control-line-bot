@@ -19,6 +19,10 @@ const client_1 = require("@prisma/client");
 const utils_1 = require("./utils");
 // global variables
 var dangerous_areas = [];
+var orig_places = [0, 0, 0, 0, 0];
+var evac_places = [0, 0, 0, 0, 0];
+var suggestions = ["", "", "", "", ""];
+var evac_names = ["", "Taipei 101", "Taipei city hall", "Taipei 101 World Trade Center station", "101 international shopping center station"];
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const config = {
@@ -43,6 +47,49 @@ app.post('/dangerous', (req, res) => {
     res.status(200).json({ message: 'Dangerous areas received successfully' });
     console.log(req.body);
 });
+// an api that response with the number of people in each traffic
+// using json
+app.get('/traffic', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const traffic = yield (0, utils_1.getTraffic)(prisma);
+    res.status(200).json(traffic);
+}));
+// an api that response with the number of people in each place
+// using json
+app.get('/places', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const places = yield (0, utils_1.getPlaces)(prisma);
+    res.status(200).json(places);
+}));
+// listen post that have a body of suggestion for each place
+// and send each suggestion to the corresponding user that is in that place
+// by loop through the database and find the user that is in that place
+// there's many places
+app.post('/suggestion', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    console.log(body);
+    res.status(200).json({ message: 'Suggestions received successfully' });
+    // loop through all user
+    const users = yield prisma.user.findMany();
+    for (const user of users) {
+        if (user.prefered_place < 1)
+            continue;
+        const lineUserId = user.lineId;
+        const evacuationPlaces = body[user.prefered_place - 1].suggestions;
+        const evacuationPlacesName = [evac_names[evacuationPlaces[0]], evac_names[evacuationPlaces[1]], evac_names[evacuationPlaces[2]]];
+        console.log("sending suggestion message to: ", lineUserId);
+        if (!lineUserId) { // impossible
+            continue;
+        }
+        yield client.pushMessage(lineUserId, {
+            type: "text",
+            text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}.
+You are in ${evacuationPlacesName[0]}.
+You can go to :
+[${evacuationPlaces[0]}] ${evacuationPlacesName[0]}
+[${evacuationPlaces[1]}] ${evacuationPlacesName[1]}
+[${evacuationPlaces[2]}] ${evacuationPlacesName[2]}`
+        });
+    }
+}));
 function getLineUserIds() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield prisma.user.findMany();
@@ -97,8 +144,10 @@ function handleEvent(event) {
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
             console.log(message);
-            if (message[1] === '.') {
+            if (message[1] === '.') { // original place
                 const chosen = message.charCodeAt(0) - 48;
+                orig_places[chosen] += 1;
+                (0, utils_1.updateTraffic)(chosen, orig_places[chosen], prisma);
                 var getUser = yield prisma.user.findUnique({
                     where: {
                         lineId: lineUserId,
@@ -106,14 +155,21 @@ function handleEvent(event) {
                 });
                 console.log(getUser);
                 if (getUser) {
-                    prisma.user.update({
-                        where: {
-                            lineId: lineUserId,
-                        },
-                        data: {
-                            prefered_place: chosen,
-                        },
-                    });
+                    (0, utils_1.updateUser)(lineUserId, chosen, prisma);
+                    console.log("update successful", chosen);
+                }
+            }
+            else if (message[0] === '[') { // evacuation place
+                const chosen = message.charCodeAt(1) - 48;
+                evac_places[chosen] += 1;
+                (0, utils_1.updatePlace)(chosen, evac_places[chosen], prisma);
+                var getUser = yield prisma.user.findUnique({
+                    where: {
+                        lineId: lineUserId,
+                    },
+                });
+                if (getUser) {
+                    (0, utils_1.updateUser2)(lineUserId, chosen, prisma);
                     console.log("update successful", chosen);
                 }
             }
@@ -128,17 +184,3 @@ function handleEvent(event) {
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
-try {
-    prisma.user.update({
-        where: {
-            id: 6,
-        },
-        data: {
-            prefered_place: 2,
-        },
-    });
-    console.log('Update operation completed successfully');
-}
-catch (error) {
-    console.error('Error updating the record:', error);
-}

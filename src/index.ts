@@ -2,12 +2,17 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
-import { add_user } from './utils'
+import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
 import { send } from 'process';
 import { assert } from 'console';
 
 // global variables
-var dangerous_areas: string[] = []
+var dangerous_areas: string[] = [];
+var orig_places: number[] = [0, 0, 0, 0, 0];
+var evac_places: number[] = [0, 0, 0, 0, 0];
+var suggestions: string[] = ["", "", "", "", ""];
+var evac_names: string[] = ["", "Taipei 101", "Taipei city hall", "Taipei 101 World Trade Center station", "101 international shopping center station"];
+
 
 const app = express();
 
@@ -38,6 +43,55 @@ app.post('/dangerous', (req, res) => {
   res.status(200).json({ message: 'Dangerous areas received successfully' });
   console.log(req.body);
 });
+
+// an api that response with the number of people in each traffic
+// using json
+app.get('/traffic', async (req, res) => {
+  const traffic = await getTraffic(prisma);
+  res.status(200).json(traffic);
+});
+
+// an api that response with the number of people in each place
+// using json
+app.get('/places', async (req, res) => {
+  const places = await getPlaces(prisma);
+  res.status(200).json(places);
+});
+
+
+// listen post that have a body of suggestion for each place
+// and send each suggestion to the corresponding user that is in that place
+// by loop through the database and find the user that is in that place
+// there's many places
+app.post('/suggestion', async (req, res) => {
+  const body = req.body;
+  console.log(body);
+  res.status(200).json({ message: 'Suggestions received successfully' });
+  
+  // loop through all user
+  const users = await prisma.user.findMany();
+  for (const user of users) {
+    if(user.prefered_place < 1) continue;
+    const lineUserId = user.lineId;
+    const evacuationPlaces = body[user.prefered_place-1].suggestions;
+    const evacuationPlacesName = [evac_names[evacuationPlaces[0]], evac_names[evacuationPlaces[1]], evac_names[evacuationPlaces[2]]];
+    console.log("sending suggestion message to: ", lineUserId);
+    if (!lineUserId) { // impossible
+      continue;
+    }
+    await client.pushMessage(lineUserId, {
+      type: "text",
+      text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}.
+You are in ${evacuationPlacesName[0]}.
+You can go to :
+[${evacuationPlaces[0]}] ${evacuationPlacesName[0]}
+[${evacuationPlaces[1]}] ${evacuationPlacesName[1]}
+[${evacuationPlaces[2]}] ${evacuationPlacesName[2]}`
+    });
+  }
+});
+
+
 
 async function getLineUserIds() {
   const users = await prisma.user.findMany();
@@ -97,8 +151,10 @@ async function handleEvent(event: WebhookEvent) {
 
     const message = (event.message as TextEventMessage)?.text;
     console.log(message)
-    if (message[1] === '.') {
+    if (message[1] === '.') { // original place
       const chosen = message.charCodeAt(0) - 48;
+      orig_places[chosen] += 1;
+      updateTraffic(chosen, orig_places[chosen], prisma);
       var getUser: object | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
@@ -106,7 +162,20 @@ async function handleEvent(event: WebhookEvent) {
       });
       console.log(getUser);
       if (getUser) {
-        updateUser(lineUserId, chosen);
+        updateUser(lineUserId, chosen, prisma);
+        console.log("update successful", chosen);
+      }
+    } else if (message[0] === '[') { // evacuation place
+      const chosen = message.charCodeAt(1) - 48;
+      evac_places[chosen] += 1;
+      updatePlace(chosen, evac_places[chosen], prisma);
+      var getUser: object | null = await prisma.user.findUnique({
+        where: {
+          lineId: lineUserId,
+        },
+      });
+      if (getUser) {
+        updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
     }
@@ -126,20 +195,3 @@ app.listen(3000, () => {
 });
 
 
-async function updateUser(lineId: string, preferredPlace: number): Promise<void> {
-  try {
-    const updatedUser = await prisma.user.update({
-      where: {
-        lineId: lineId,
-      },
-      data: {
-        prefered_place: preferredPlace,
-      },
-    });
-    console.log('User updated:', updatedUser);
-  } catch (error) {
-    console.error('Error updating user:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
-}

@@ -11,14 +11,20 @@ datasource db {
 }
 
 model User {
-  id             Int    @id @default(autoincrement())
+  id             Int    @id @unique @default(autoincrement())
   lineId         String @unique
   prefered_place Int    @default(-1)
   chose_place    Int    @default(-1)
 }
 
 model Places {
-  id                  Int    @id @default(autoincrement())
-  name                String
+  id                  Int    @id @unique @default(autoincrement())
+  name                String @unique
+  chosen_Users_number Int    @default(0)
+}
+
+model Traffic {
+  id                  Int    @id @unique @default(autoincrement())
+  name                String @unique
   chosen_Users_number Int    @default(0)
 }
