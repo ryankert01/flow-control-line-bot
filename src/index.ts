@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
+import { add_user } from './utils'
 
 const app = express();
 
@@ -32,16 +33,16 @@ const prisma = new PrismaClient()
 
 async function handleEvent(event: WebhookEvent) {
   if (event.type === 'follow') {
-    const userId = event.source.userId!;
-    const user = await prisma.user.create({
-      data: {
-        lineId: userId,
-      },
-    })
-    console.log(user)
+    const lineUserId = event.source.userId!;
+
+    add_user(lineUserId, prisma)
   }
   
   if (event.type === 'message') {
+    const lineUserId = event.source.userId!;
+
+    add_user(lineUserId, prisma)
+
     const message = (event.message as TextEventMessage)?.text;
     const replyToken = event.replyToken!;
     // Process the received message and prepare a response
@@ -54,3 +55,5 @@ async function handleEvent(event: WebhookEvent) {
 app.listen(3000, () => {
   console.log('Line bot is running on port 3000');
 });
+
+

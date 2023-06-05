@@ -38,13 +38,21 @@ function handleEvent(event) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (event.type === 'follow') {
-            const userId = event.source.userId;
-            const user = yield prisma.user.create({
-                data: {
-                    lineId: userId,
+            const lineUserId = event.source.userId;
+            // Returns an object or null
+            const getUser = yield prisma.user.findUnique({
+                where: {
+                    lineId: lineUserId,
                 },
             });
-            console.log(user);
+            if (getUser) {
+                const user = yield prisma.user.create({
+                    data: {
+                        lineId: lineUserId,
+                    },
+                });
+                console.log(user);
+            }
         }
         if (event.type === 'message') {
             const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
@@ -59,3 +67,35 @@ function handleEvent(event) {
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const lineUserId = 'test12';
+        // Returns an object or null
+        const getUser = yield prisma.user.findUnique({
+            where: {
+                lineId: lineUserId,
+            },
+        });
+        if (!getUser) {
+            const user = yield prisma.user.create({
+                data: {
+                    lineId: lineUserId,
+                },
+            });
+            console.log(user);
+        }
+        else {
+            console.log('User already exists');
+            console.log(getUser);
+        }
+    });
+}
+main()
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield prisma.$disconnect();
+}))
+    .catch((e) => __awaiter(void 0, void 0, void 0, function* () {
+    console.error(e);
+    yield prisma.$disconnect();
+    process.exit(1);
+}));
