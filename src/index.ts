@@ -99,7 +99,22 @@ async function handleEvent(event: WebhookEvent) {
     
     if (message[1] === '.') {
       const chosen = message.charCodeAt(0) - 48;
+      var getUser: object | null = await prisma.user.findUnique({
+        where: {
+          lineId: lineUserId,
+        },
+      });
+      if (getUser) {
+        prisma.user.update({
+          where: {
+            lineId: lineUserId,
+          },
+          data: {
+            prefered_place: chosen,
+          },
+        });
 
+      }
     }
 
 

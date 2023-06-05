@@ -61,13 +61,25 @@ function sendDangerousAreasMessages() {
             yield client.pushMessage(lineUserId, {
                 type: "text",
                 text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
-選擇離您最近或最方便的疏散點:
+安安，您在哪裡附近呢?:
 1. metro-entry-1
 2. metro-entry-2
 3. bus-station-1
 4. bus-station-2`
             });
         }
+    });
+}
+function sendEvacuationMessages(lineUserId, chosen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("sending evacuation message to: ", lineUserId);
+        if (!lineUserId) { // impossible
+            return;
+        }
+        yield client.pushMessage(lineUserId, {
+            type: "text",
+            text: `You have chosen ${chosen}`
+        });
     });
 }
 const client = new bot_sdk_1.Client(config);
@@ -84,6 +96,24 @@ function handleEvent(event) {
             const lineUserId = event.source.userId;
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
+            if (message[1] === '.') {
+                const chosen = message.charCodeAt(0) - 48;
+                var getUser = yield prisma.user.findUnique({
+                    where: {
+                        lineId: lineUserId,
+                    },
+                });
+                if (getUser) {
+                    prisma.user.update({
+                        where: {
+                            lineId: lineUserId,
+                        },
+                        data: {
+                            prefered_place: chosen,
+                        },
+                    });
+                }
+            }
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
             const response = `You selected: ${message}, and your user id is ${current_user}`;
