@@ -114,7 +114,7 @@ async function handleEvent(event: WebhookEvent) {
             prefered_place: chosen,
           },
         });
-        console.log("update successful");
+        console.log("update successful", chosen);
       }
     }
 
