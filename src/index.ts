@@ -35,18 +35,18 @@ async function handleEvent(event: WebhookEvent) {
   if (event.type === 'follow') {
     const lineUserId = event.source.userId!;
 
-    add_user(lineUserId, prisma)
+    const current_user = add_user(lineUserId, prisma)
   }
   
   if (event.type === 'message') {
     const lineUserId = event.source.userId!;
 
-    add_user(lineUserId, prisma)
+    const current_user = await add_user(lineUserId, prisma)
 
     const message = (event.message as TextEventMessage)?.text;
     const replyToken = event.replyToken!;
     // Process the received message and prepare a response
-    const response = `You selected: ${message}`;
+    const response = `You selected: ${message}, and your user id is ${current_user}`;
     // Send the response back to the user
     return client.replyMessage(replyToken, { type: 'text', text: response });
   }

@@ -2,7 +2,7 @@ async function add_user(id: string, prisma: any) {
     const lineUserId = id;
   
     // Returns an object or null
-    const getUser: object | null = await prisma.user.findUnique({
+    var getUser: object | null = await prisma.user.findUnique({
       where: {
         lineId: lineUserId,
       },
@@ -18,7 +18,14 @@ async function add_user(id: string, prisma: any) {
       console.log('User already exists');
       console.log(getUser)
     }
-  
+
+    getUser = await prisma.user.findUnique({
+        where: {
+          lineId: lineUserId,
+        },
+    });
+    
+    return getUser
 }
 
 export { add_user }
