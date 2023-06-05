@@ -4,14 +4,22 @@
   "description": "```sh\r conda activate line-bot\r ```",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@line/bot-sdk": "^7.5.2",
+    "@prisma/client": "^4.15.0",
+    "dotenv": "^16.1.4",
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.2.5",
+    "prisma": "^4.15.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
   }
 }
