@@ -96,7 +96,7 @@ async function handleEvent(event: WebhookEvent) {
     const current_user = await add_user(lineUserId, prisma)
 
     const message = (event.message as TextEventMessage)?.text;
-    
+    console.log(message)
     if (message[1] === '.') {
       const chosen = message.charCodeAt(0) - 48;
       var getUser: object | null = await prisma.user.findUnique({
@@ -104,6 +104,7 @@ async function handleEvent(event: WebhookEvent) {
           lineId: lineUserId,
         },
       });
+      console.log(getUser);
       if (getUser) {
         prisma.user.update({
           where: {
@@ -113,7 +114,7 @@ async function handleEvent(event: WebhookEvent) {
             prefered_place: chosen,
           },
         });
-
+        console.log("update successful");
       }
     }
 
