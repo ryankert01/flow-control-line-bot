@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
+import cors from 'cors';
 import { send } from 'process';
 import { assert } from 'console';
 
@@ -22,7 +23,7 @@ const config = {
   channelSecret: process.env.LINE_CHANNEL_SECRET!,
 };
 
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
