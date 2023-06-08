@@ -59,6 +59,13 @@ app.get('/places', async (req, res) => {
   res.status(200).json(places);
 });
 
+// an api that response with users data
+// using json 
+app.get('/users', async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.status(200).json(users);
+});
+
 
 // listen post that have a body of suggestion for each place
 // and send each suggestion to the corresponding user that is in that place
