@@ -70,7 +70,7 @@ function updateUser2(lineId, evacuationPlace, prisma) {
                     lineId: lineId,
                 },
                 data: {
-                    evacuation_place: evacuationPlace,
+                    chose_place: evacuationPlace,
                 },
             });
             console.log('User updated:', updatedUser);

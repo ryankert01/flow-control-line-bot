@@ -17,79 +17,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const bot_sdk_1 = require("@line/bot-sdk");
 const client_1 = require("@prisma/client");
 const utils_1 = require("./utils");
-// global variables
-var dangerous_areas = [];
-var orig_places = [0, 0, 0, 0, 0];
-var evac_places = [0, 0, 0, 0, 0];
-var suggestions = ["", "", "", "", ""];
-var evac_names = ["", "Taipei 101", "Taipei city hall", "Taipei 101 World Trade Center station", "101 international shopping center station"];
-const app = (0, express_1.default)();
-dotenv_1.default.config();
-const config = {
-    channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.LINE_CHANNEL_SECRET,
-};
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.post('/webhook', (req, res) => {
-    Promise.all(req.body.events.map(handleEvent))
-        .then((result) => res.json(result))
-        .catch((error) => {
-        console.error('Error processing events:', error);
-        res.status(500).end();
-    });
-});
-app.post('/dangerous', (req, res) => {
-    const isDangerous = req.body.is_dangerous;
-    const dangerousAreas = req.body.dangerous_areas;
-    dangerous_areas = dangerousAreas;
-    sendDangerousAreasMessages();
-    res.status(200).json({ message: 'Dangerous areas received successfully' });
-    console.log(req.body);
-});
-// an api that response with the number of people in each traffic
-// using json
-app.get('/traffic', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const traffic = yield (0, utils_1.getTraffic)(prisma);
-    res.status(200).json(traffic);
-}));
-// an api that response with the number of people in each place
-// using json
-app.get('/places', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const places = yield (0, utils_1.getPlaces)(prisma);
-    res.status(200).json(places);
-}));
-// listen post that have a body of suggestion for each place
-// and send each suggestion to the corresponding user that is in that place
-// by loop through the database and find the user that is in that place
-// there's many places
-app.post('/suggestion', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body;
-    console.log(body);
-    res.status(200).json({ message: 'Suggestions received successfully' });
-    // loop through all user
-    const users = yield prisma.user.findMany();
-    for (const user of users) {
-        if (user.prefered_place < 1)
-            continue;
-        const lineUserId = user.lineId;
-        const evacuationPlaces = body[user.prefered_place - 1].suggestions;
-        const evacuationPlacesName = [evac_names[evacuationPlaces[0]], evac_names[evacuationPlaces[1]], evac_names[evacuationPlaces[2]]];
-        console.log("sending suggestion message to: ", lineUserId);
-        if (!lineUserId) { // impossible
-            continue;
-        }
-        yield client.pushMessage(lineUserId, {
-            type: "text",
-            text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}.
-You are in ${evacuationPlacesName[0]}.
-You can go to :
-[${evacuationPlaces[0]}] ${evacuationPlacesName[0]}
-[${evacuationPlaces[1]}] ${evacuationPlacesName[1]}
-[${evacuationPlaces[2]}] ${evacuationPlacesName[2]}`
-        });
-    }
-}));
+const message_1 = require("./message");
+const cors_1 = __importDefault(require("cors"));
 function getLineUserIds() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield prisma.user.findMany();
@@ -105,32 +34,10 @@ function sendDangerousAreasMessages() {
             if (!lineUserId) { // impossible
                 continue;
             }
-            yield client.pushMessage(lineUserId, {
-                type: "text",
-                text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
-安安，您在哪裡附近呢?:
-1. metro-entry-1
-2. metro-entry-2
-3. bus-station-1
-4. bus-station-2`
-            });
+            yield client.pushMessage(lineUserId, (0, message_1.getDangerousAreaMessage)(dangerous_areas));
         }
     });
 }
-function sendEvacuationMessages(lineUserId, chosen) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log("sending evacuation message to: ", lineUserId);
-        if (!lineUserId) { // impossible
-            return;
-        }
-        yield client.pushMessage(lineUserId, {
-            type: "text",
-            text: `You have chosen ${chosen}`
-        });
-    });
-}
-const client = new bot_sdk_1.Client(config);
-const prisma = new client_1.PrismaClient();
 function handleEvent(event) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -181,6 +88,106 @@ function handleEvent(event) {
         }
     });
 }
+// global variables
+var dangerous_areas = [];
+var orig_places = [0, 0, 0, 0, 0];
+var evac_places = [0, 0, 0, 0, 0];
+var suggestions = ["", "", "", "", ""];
+var evac_names = ["", "Taipei 101", "Taipei city hall", "Taipei 101 World Trade Center station", "101 international shopping center station"];
+const app = (0, express_1.default)();
+dotenv_1.default.config();
+const config = {
+    channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
+    channelSecret: process.env.LINE_CHANNEL_SECRET,
+};
+const client = new bot_sdk_1.Client(config);
+const prisma = new client_1.PrismaClient();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
+app.post('/webhook', (req, res) => {
+    Promise.all(req.body.events.map(handleEvent))
+        .then((result) => res.json(result))
+        .catch((error) => {
+        console.error('Error processing events:', error);
+        res.status(500).end();
+    });
+});
+app.post('/dangerous', (req, res) => {
+    const isDangerous = req.body.is_dangerous;
+    const dangerousAreas = req.body.dangerous_areas;
+    dangerous_areas = dangerousAreas;
+    sendDangerousAreasMessages();
+    res.status(200).json({ message: 'Dangerous areas received successfully' });
+    console.log(req.body);
+});
+// an api that response with the number of people in each traffic
+// using json
+app.get('/traffic', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const traffic = yield (0, utils_1.getTraffic)(prisma);
+    res.status(200).json(traffic);
+}));
+// an api that response with the number of people in each place
+// using json
+app.get('/places', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const places = yield (0, utils_1.getPlaces)(prisma);
+    res.status(200).json(places);
+}));
+// an api that response with users data
+// using json 
+app.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield prisma.user.findMany();
+    res.status(200).json(users);
+}));
+// listen post that have a body of a list of users and suggestions for them
+// and send line message to each user depending on their suggestion
+app.post('/evacuation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body.userInfo;
+    console.log(body);
+    res.status(200).json({ message: 'Evacuation received successfully' });
+    // loop through all user
+    for (const user of body) {
+        const lineUserId = user.lineId;
+        const suggestions = user.suggestion;
+        console.log("sending evacuation message to: ", lineUserId);
+        if (!lineUserId) { // impossible
+            continue;
+        }
+        yield client.pushMessage(lineUserId, (0, message_1.getEvacuationMessage)(suggestions));
+    }
+}));
+// listen post that have a body of suggestion for each place
+// and send each suggestion to the corresponding user that is in that place
+// by loop through the database and find the user that is in that place
+// there's many places
+// @deprecated
+app.post('/suggestion', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    console.log(body);
+    res.status(200).json({ message: 'Suggestions received successfully' });
+    // loop through all user
+    const users = yield prisma.user.findMany();
+    for (const user of users) {
+        if (user.prefered_place < 1)
+            continue;
+        const lineUserId = user.lineId;
+        const evacuationPlaces = body[user.prefered_place - 1].suggestions;
+        const evacuationPlacesName = [evac_names[evacuationPlaces[0]], evac_names[evacuationPlaces[1]], evac_names[evacuationPlaces[2]]];
+        console.log("sending suggestion message to: ", lineUserId);
+        if (!lineUserId) { // impossible
+            continue;
+        }
+        yield client.pushMessage(lineUserId, {
+            type: "text",
+            text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}.
+You are in ${evacuationPlacesName[0]}.
+You can go to :
+[${evacuationPlaces[0]}] ${evacuationPlacesName[0]}
+[${evacuationPlaces[1]}] ${evacuationPlacesName[1]}
+[${evacuationPlaces[2]}] ${evacuationPlacesName[2]}`
+        });
+    }
+}));
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
