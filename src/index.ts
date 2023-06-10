@@ -155,7 +155,7 @@ app.get('/users', async (req, res) => {
 // listen post that have a body of a list of users and suggestions for them
 // and send line message to each user depending on their suggestion
 app.post('/evacuation', async (req, res) => {
-  const body = req.body.userInfo;
+  const body = req.body.suggest_info;
   console.log(body);
   res.status(200).json({ message: 'Evacuation received successfully' });
   
