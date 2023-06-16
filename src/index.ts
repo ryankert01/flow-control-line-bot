@@ -5,16 +5,13 @@ import { PrismaClient } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
 import  {getEvacuationMessage ,getDangerousAreaMessage}  from './message'
 import cors from 'cors';
-import { send } from 'process';
-import { assert } from 'console';
-import { get } from 'http';
 
 
 
 
 async function getLineUserIds() {
   const users = await prisma.user.findMany();
-  return users.map((user) => user.lineId);
+  return users.map((user:any) => user.lineId);
 }
 
 async function sendDangerousAreasMessages() {
@@ -155,7 +152,7 @@ app.get('/users', async (req, res) => {
 // listen post that have a body of a list of users and suggestions for them
 // and send line message to each user depending on their suggestion
 app.post('/evacuation', async (req, res) => {
-  const body = req.body.suggest_info;
+  const body = req.body;
   console.log(body);
   res.status(200).json({ message: 'Evacuation received successfully' });
   
