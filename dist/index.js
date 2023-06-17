@@ -46,10 +46,10 @@ function handleEvent(event) {
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             client.pushMessage(lineUserId, { type: 'text', text: `Your user id is ${current_user}` });
         }
-        if (event.type === 'message') {
+        if (event.type === 'postback') {
             const lineUserId = event.source.userId;
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
-            const message = (_a = event.message) === null || _a === void 0 ? void 0 : _a.text;
+            const message = (_a = event.postback.data) === null || _a === void 0 ? void 0 : _a.text;
             console.log(message);
             if (message[1] === '.') { // original place
                 const chosen = message.charCodeAt(0) - 48;
@@ -77,16 +77,13 @@ function handleEvent(event) {
                     where: {
                         lineId: lineUserId,
                     },
-                    select: {
-                        prefered_place: true,
-                    },
                 });
                 if (getUser) {
                     (0, utils_1.updateUser2)(lineUserId, chosen, prisma);
                     console.log("update successful", chosen);
                     console.log(getUser);
-                    //const preferred_place: number = getUser.prefered_place;
-                    return client.replyMessage(event.replyToken, (0, message_1.getChoosePlaceMapMessage)(chosen));
+                    const preferred_place = getUser.prefered_place;
+                    return client.replyMessage(event.replyToken, (0, message_1.getChoosePlaceMapMessage)(preferred_place, chosen));
                 }
             }
             const replyToken = event.replyToken;
@@ -203,8 +200,14 @@ app.listen(3000, () => {
 });
 function getTrafficcc(prisma) {
     return __awaiter(this, void 0, void 0, function* () {
-        var getUser = yield prisma.user({ lineId: "Ucd211142498029852cb840019b85b1f7" });
-        console.log(getUser.prefered_place);
+        var getUser = yield prisma.user.findUnique({
+            where: {
+                lineId: "Ucd211142498029852cb840019b85b1f7",
+            },
+        });
+        var preferedPlace = null;
+        if (getUser)
+            preferedPlace = getUser.prefered_place;
     });
 }
 getTrafficcc(prisma);

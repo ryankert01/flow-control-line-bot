@@ -44,7 +44,7 @@ async function handleEvent(event: WebhookEvent) {
 
     const current_user = await add_user(lineUserId, prisma)
 
-    const message = (event.postback.data as any)?.text;
+    const message = event.postback.data as any;
     console.log(message)
     if (message[1] === '.') { // original place
       const chosen = message.charCodeAt(0) - 48;
