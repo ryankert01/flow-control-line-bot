@@ -16,7 +16,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 1. Taipei 101
 2. Xinyi plaza
 3. Taipei trade center
-4. Breeze Nan Shan'
+4. Breeze Nan Shan`
      };
 }
 
