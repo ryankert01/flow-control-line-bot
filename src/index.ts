@@ -89,6 +89,19 @@ async function handleEvent(event: WebhookEvent) {
     // Send the response back to the user
     return client.replyMessage(replyToken, { type: 'text', text: response });
   }
+
+  if (event.type === 'message') {
+    const message = event.message as TextEventMessage;
+    const lineUserId = event.source.userId!;
+
+    const current_user = await add_user(lineUserId, prisma)
+
+    const replyToken = event.replyToken!;
+    // Process the received message and prepare a response
+    const response = `You sent: ${message.text}, and your user id is ${current_user}`;
+    // Send the response back to the user
+    return client.replyMessage(replyToken, { type: 'text', text: response });
+  }
 }
 
 // global variables
