@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
+import { TextEventMessage, WebhookEvent, Client, PostbackEvent } from '@line/bot-sdk';
 import { PrismaClient, User } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
 import  {getEvacuationMessage ,getDangerousAreaMessage, getChoosePlaceMapMessage}  from './message'
@@ -30,6 +30,8 @@ async function sendDangerousAreasMessages() {
 
 
 async function handleEvent(event: WebhookEvent) {
+
+  
   if (event.type === 'follow') {
     const lineUserId = event.source.userId!;
 
@@ -37,12 +39,12 @@ async function handleEvent(event: WebhookEvent) {
     client.pushMessage(lineUserId, { type: 'text', text: `Your user id is ${current_user}` });
   }
   
-  if (event.type === 'message') {
+  if (event.type === 'postback') {
     const lineUserId = event.source.userId!;
 
     const current_user = await add_user(lineUserId, prisma)
 
-    const message = (event.message as TextEventMessage)?.text;
+    const message = (event.postback.data as any)?.text;
     console.log(message)
     if (message[1] === '.') { // original place
       const chosen = message.charCodeAt(0) - 48;
