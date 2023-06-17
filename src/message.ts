@@ -66,8 +66,69 @@ function getEvacuationMessage(suggestions: any):any {
       };
 }
 
+const images = [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Tower_of_Taipei_101%28cropped%29.jpg/250px-Tower_of_Taipei_101%28cropped%29.jpg',
+    'https://content.shopback.com/tw/wp-content/uploads/2020/10/16151231/xingyi-shopping.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Taipei_World_Trade_Center_International_Trade_Building_20090617.jpg/1200px-Taipei_World_Trade_Center_International_Trade_Building_20090617.jpg',
+    'https://cc.tvbs.com.tw/img/program/upload/2019/01/08/20190108174637-05aeede7.jpg',
+  ];
+  
+const locations = [
+    'Taipei 101', 
+    'Xinyi plaza', 
+    'Taipei trade center', 
+    'Breeze Nan Shan'
+];
 function getDangerousAreaMessage(dangerous_areas: any):any {
-    return {
+
+    return{
+        "type": "imagemap",
+        "baseUrl": "https://example.com/bot/images/rm001",
+        "altText": "This is an imagemap",
+        "baseSize": {
+          "width": 1040,
+          "height": 1040
+        },
+        "video": {
+          "originalContentUrl": "https://example.com/video.mp4",
+          "previewImageUrl": "https://example.com/video_preview.jpg",
+          "area": {
+            "x": 0,
+            "y": 0,
+            "width": 1040,
+            "height": 585
+          },
+          "externalLink": {
+            "linkUri": "https://example.com/see_more.html",
+            "label": "See More"
+          }
+        },
+        "actions": [
+          {
+            "type": "uri",
+            "linkUri": "https://example.com/",
+            "area": {
+              "x": 0,
+              "y": 586,
+              "width": 520,
+              "height": 454
+            }
+          },
+          {
+            "type": "message",
+            "text": "Hello",
+            "area": {
+              "x": 520,
+              "y": 586,
+              "width": 520,
+              "height": 454
+            }
+          }
+        ]
+      }
+
+    
+    /*return {
         type: "text",
         text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
 安安，您在哪裡附近呢?:
@@ -75,30 +136,15 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 2. Xinyi plaza
 3. Taipei trade center
 4. Breeze Nan Shan`
-     };
+     };*/
 }
 
 // choose_place_id is the id of the place that user choose
-function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: number, choose_place_name: String):any {
-    // replace all the space with '+' in the place name
-    choose_place_name = choose_place_name.replace(/ /g, '+');
+function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: any):any {
     return {
-        "type": "template",
-        "altText": "Image with URL",
-        "template": {
-          "type": "image_carousel",
-          "columns": [
-            {
-              "imageUrl": `https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/${prefered_place}-${choose_place_id}.png`,
-              "action": {
-                "type": "uri",
-                "label": "Navigate",
-                "uri": `https://www.google.com/maps/dir/?api=1&origin=%E7%9B%AE%E5%89%8D%E6%89%80%E5%9C%A8%E4%BD%8D%E7%BD%AE&destination=${choose_place_name}&travelmode=walking&dir_action=navigate`
-              }
-            }
-          ]
-        }
-      };
+        type: "text",
+        text: "your chosen place: " + prefered_place + " " + choose_place_id + " ",
+    };
 }
 
 
