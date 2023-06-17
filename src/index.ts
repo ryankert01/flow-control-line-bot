@@ -1,10 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
-import  {getEvacuationMessage ,getDangerousAreaMessage, getChoosePlaceMap}  from './message'
+import  {getEvacuationMessage ,getDangerousAreaMessage, getChoosePlaceMapMessage}  from './message'
 import cors from 'cors';
+import { get } from 'http';
 
 
 
@@ -28,8 +29,6 @@ async function sendDangerousAreasMessages() {
 
 
 
-
-
 async function handleEvent(event: WebhookEvent) {
   if (event.type === 'follow') {
     const lineUserId = event.source.userId!;
@@ -49,7 +48,7 @@ async function handleEvent(event: WebhookEvent) {
       const chosen = message.charCodeAt(0) - 48;
       orig_places[chosen] += 1;
       updateTraffic(chosen, orig_places[chosen], prisma);
-      var getUser: object | null = await prisma.user.findUnique({
+      var getUser: User | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
         },
@@ -60,10 +59,13 @@ async function handleEvent(event: WebhookEvent) {
         console.log("update successful", chosen);
       }
     } else if (message[0] === '[') { // evacuation place
-      const chosen = message.charCodeAt(1) - 48;
+      var chosen: number = message.charCodeAt(1) - 48;
+      if (message[2] !== ']') {
+        chosen = chosen * 10 + message.charCodeAt(2) - 48;
+      }
       evac_places[chosen] += 1;
       updatePlace(chosen, evac_places[chosen], prisma);
-      var getUser: object | null = await prisma.user.findUnique({
+      var getUser: User | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
         },
@@ -71,8 +73,10 @@ async function handleEvent(event: WebhookEvent) {
       if (getUser) {
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
+        console.log(getUser)
+        const preferred_place: number = getUser.prefered_place;
+        return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(preferred_place, chosen));
       }
-      return client.replyMessage(event.replyToken, getEvacuationMessage(chosen));
     }
 
 
@@ -208,3 +212,17 @@ You can go to :
 app.listen(3000, () => {
   console.log('Line bot is running on port 3000');
 });
+
+async function getTrafficcc(prisma: PrismaClient){
+  var getUser: User | null = await prisma.user.findUnique({
+    where: {
+      lineId: "Ucd211142498029852cb840019b85b1f7",
+    },
+  });
+  var preferedPlace = null
+  if(getUser)
+    preferedPlace = getUser.prefered_place;
+
+}
+
+getTrafficcc(prisma);

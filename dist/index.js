@@ -67,19 +67,27 @@ function handleEvent(event) {
                 }
             }
             else if (message[0] === '[') { // evacuation place
-                const chosen = message.charCodeAt(1) - 48;
+                var chosen = message.charCodeAt(1) - 48;
+                if (message[2] !== ']') {
+                    chosen = chosen * 10 + message.charCodeAt(2) - 48;
+                }
                 evac_places[chosen] += 1;
                 (0, utils_1.updatePlace)(chosen, evac_places[chosen], prisma);
                 var getUser = yield prisma.user.findUnique({
                     where: {
                         lineId: lineUserId,
                     },
+                    select: {
+                        prefered_place: true,
+                    },
                 });
                 if (getUser) {
                     (0, utils_1.updateUser2)(lineUserId, chosen, prisma);
                     console.log("update successful", chosen);
+                    console.log(getUser);
+                    //const preferred_place: number = getUser.prefered_place;
+                    return client.replyMessage(event.replyToken, (0, message_1.getChoosePlaceMapMessage)(chosen));
                 }
-                return client.replyMessage(event.replyToken, (0, message_1.getEvacuationMessage)(chosen));
             }
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
@@ -117,6 +125,7 @@ app.post('/webhook', (req, res) => {
 app.post('/dangerous', (req, res) => {
     const isDangerous = req.body.is_dangerous;
     const dangerousAreas = req.body.dangerous_areas;
+    console.log(dangerousAreas);
     dangerous_areas = dangerousAreas;
     sendDangerousAreasMessages();
     res.status(200).json({ message: 'Dangerous areas received successfully' });
@@ -192,3 +201,10 @@ You can go to :
 app.listen(3000, () => {
     console.log('Line bot is running on port 3000');
 });
+function getTrafficcc(prisma) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var getUser = yield prisma.user({ lineId: "Ucd211142498029852cb840019b85b1f7" });
+        console.log(getUser.prefered_place);
+    });
+}
+getTrafficcc(prisma);
