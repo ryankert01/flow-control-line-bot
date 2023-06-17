@@ -123,6 +123,7 @@ app.post('/webhook', (req, res) => {
 app.post('/dangerous', (req, res) => {
   const isDangerous = req.body.is_dangerous;
   const dangerousAreas = req.body.dangerous_areas;
+  console.log(dangerousAreas)
   dangerous_areas = dangerousAreas;
   sendDangerousAreasMessages();
   res.status(200).json({ message: 'Dangerous areas received successfully' });

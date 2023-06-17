@@ -79,6 +79,7 @@ function handleEvent(event) {
                     (0, utils_1.updateUser2)(lineUserId, chosen, prisma);
                     console.log("update successful", chosen);
                 }
+                return client.replyMessage(event.replyToken, (0, message_1.getEvacuationMessage)(chosen));
             }
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
@@ -142,7 +143,7 @@ app.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // listen post that have a body of a list of users and suggestions for them
 // and send line message to each user depending on their suggestion
 app.post('/evacuation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body.userInfo;
+    const body = req.body;
     console.log(body);
     res.status(200).json({ message: 'Evacuation received successfully' });
     // loop through all user
