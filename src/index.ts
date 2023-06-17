@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client } from '@line/bot-sdk';
 import { PrismaClient } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
-import  {getEvacuationMessage ,getDangerousAreaMessage}  from './message'
+import  {getEvacuationMessage ,getDangerousAreaMessage, getChoosePlaceMap}  from './message'
 import cors from 'cors';
 
 
@@ -72,6 +72,7 @@ async function handleEvent(event: WebhookEvent) {
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
+      return client.replyMessage(event.replyToken, getEvacuationMessage(chosen));
     }
 
 

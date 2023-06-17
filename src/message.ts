@@ -19,5 +19,14 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
       };
 }
 
+// choose_place_id is the id of the place that user choose
+function getChoosePlaceMap(choose_place_id: any):any {
+    return {
+        type: "text",
+        text: "choose place",
+        };
+}
 
-export { getEvacuationMessage, getDangerousAreaMessage };
+
+
+export { getEvacuationMessage, getDangerousAreaMessage, getChoosePlaceMap };
