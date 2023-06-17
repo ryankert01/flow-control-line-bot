@@ -8,59 +8,57 @@ function getEvacuationMessage(suggestions: any):any {
             {
               "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
               "imageBackgroundColor": "#FFFFFF",
-              "title": "this is menu",
-              "text": "description",
+              "title": "推薦疏散地點(1)",
+              "text": "點選下方按鈕以選擇疏散地點",
               "defaultAction": {
                 "type": "uri",
-                "label": "View detail",
+                "label": "選擇",
                 "uri": "http://example.com/page/123"
               },
               "actions": [
                 {
                   "type": "postback",
-                  "label": "Buy",
+                  "label": "選擇",
                   "data": "action=buy&itemid=111"
                 },
-                {
-                  "type": "postback",
-                  "label": "Add to cart",
-                  "data": "action=add&itemid=111"
-                },
-                {
-                  "type": "uri",
-                  "label": "View detail",
-                  "uri": "http://example.com/page/111"
-                }
               ]
             },
             {
               "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
               "imageBackgroundColor": "#000000",
-              "title": "this is menu",
-              "text": "description",
+              "title": "推薦疏散地點(2)",
+              "text": "點選下方按鈕以選擇疏散地點",
               "defaultAction": {
                 "type": "uri",
-                "label": "View detail",
+                "label": "選擇",
                 "uri": "http://example.com/page/222"
               },
               "actions": [
                 {
                   "type": "postback",
-                  "label": "Buy",
+                  "label": "選擇",
                   "data": "action=buy&itemid=222"
                 },
-                {
-                  "type": "postback",
-                  "label": "Add to cart",
-                  "data": "action=add&itemid=222"
-                },
-                {
-                  "type": "uri",
-                  "label": "View detail",
-                  "uri": "http://example.com/page/222"
-                }
               ]
-            }
+            },
+            {
+                "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
+                "imageBackgroundColor": "#000000",
+                "title": "推薦疏散地點(3)",
+                "text": "點選下方按鈕以選擇疏散地點",
+                "defaultAction": {
+                  "type": "uri",
+                  "label": "選擇",
+                  "uri": "http://example.com/page/222"
+                },
+                "actions": [
+                  {
+                    "type": "postback",
+                    "label": "選擇",
+                    "data": "action=buy&itemid=222"
+                  },
+                ]
+              }
           ],
           "imageAspectRatio": "rectangle",
           "imageSize": "cover"
