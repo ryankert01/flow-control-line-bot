@@ -1,5 +1,19 @@
 # Line bot
 
+## npm
+
+install
+
+```sh
+npm install
+```
+
+run
+
+```sh
+npm start
+```
+
 ## Docker
 
 build
