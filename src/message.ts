@@ -70,11 +70,11 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
     return {
         type: "text",
         text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
-        安安，您在哪裡附近呢?:
-        1. Taipei 101
-        2. Xinyi plaza
-        3. Taipei trade center
-        4. Breeze Nan Shan`
+安安，您在哪裡附近呢?:
+1. Taipei 101
+2. Xinyi plaza
+3. Taipei trade center
+4. Breeze Nan Shan`
      };
 }
 
