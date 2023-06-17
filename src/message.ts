@@ -19,7 +19,7 @@ function getEvacuationMessage(suggestions: any):any {
                 {
                   "type": "postback",
                   "label": "選擇",
-                  "data": "choose!!"
+                  "data": `[1] ${suggestions[0]}`
                 },
               ]
             },
@@ -37,7 +37,7 @@ function getEvacuationMessage(suggestions: any):any {
                 {
                   "type": "postback",
                   "label": "選擇",
-                  "data": "choose!!"
+                  "data": `[2] ${suggestions[1]}`
                 },
               ]
             },
@@ -55,7 +55,7 @@ function getEvacuationMessage(suggestions: any):any {
                   {
                     "type": "postback",
                     "label": "選擇",
-                    "data": "choose!!"
+                    "data": `[3] ${suggestions[2]}`
                   },
                 ]
               }
