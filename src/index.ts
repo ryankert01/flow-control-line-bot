@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { TextEventMessage, WebhookEvent, Client, PostbackEvent } from '@line/bot-sdk';
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, User, Traffic } from '@prisma/client'
 import { add_user, updateUser, updateUser2, getPlaces, getTraffic, updatePlace, updateTraffic } from './utils'
 import  {getEvacuationMessage ,getDangerousAreaMessage, getChoosePlaceMapMessage}  from './message'
 import cors from 'cors';
@@ -77,7 +77,15 @@ async function handleEvent(event: WebhookEvent) {
         console.log("update successful", chosen);
         console.log(getUser)
         const preferred_place: number = getUser.prefered_place;
-        return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(preferred_place, chosen));
+        var getTraffic: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: preferred_place,
+          },
+        });
+        if (getTraffic) {
+          const choose_place_name: string = getTraffic.name;
+          return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(preferred_place, chosen, choose_place_name));
+        }
       }
     }
 
