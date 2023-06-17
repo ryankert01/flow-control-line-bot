@@ -82,7 +82,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: any):any {
     return {
         type: "text",
-        text: "choose place",
+        text: "choose place: " + prefered_place + " " + choose_place_id + " ",
     };
 }
 
