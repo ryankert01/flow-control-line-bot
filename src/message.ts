@@ -4,7 +4,7 @@ function getEvacuationMessage(suggestions: any):any {
     direction: 'ltr',
     hero: {
       type: 'image',
-      url: getChoosePlaceMap(0),
+      URL: "https://www.google.com",
       size: 'full',
       aspectRatio: '20:13',
       aspectMode: 'cover',
@@ -47,7 +47,7 @@ function getEvacuationMessage(suggestions: any):any {
     direction: 'ltr',
     hero: {
       type: 'image',
-      url: getChoosePlaceMap(1),
+      url: "https://www.google.com",
       size: 'full',
       aspectRatio: '20:13',
       aspectMode: 'cover',
@@ -89,7 +89,7 @@ function getEvacuationMessage(suggestions: any):any {
     direction: 'ltr',
     hero: {
       type: 'image',
-      url: getChoosePlaceMap(2),
+      url: "https://www.google.com",
       size: 'full',
       aspectRatio: '20:13',
       aspectMode: 'cover',
