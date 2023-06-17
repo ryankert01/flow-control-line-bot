@@ -13,11 +13,11 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
         type: "text",
         text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
 安安，您在哪裡附近呢?:
-1. metro-entry-1
-2. metro-entry-2
-3. bus-station-1
-4. bus-station-2`
-      };
+1. Taipei 101
+2. Xinyi plaza
+3. Taipei trade center
+4. Breeze Nan Shan
+     };
 }
 
 // choose_place_id is the id of the place that user choose
