@@ -4,7 +4,8 @@ function getEvacuationMessage(suggestions: any):any {
         text: `You can go to :
 [1] ${suggestions[0]}
 [2] ${suggestions[1]}
-[3] ${suggestions[2]}`};
+[3] ${suggestions[2]}`
+    };
 }
 
 function getDangerousAreaMessage(dangerous_areas: any):any {
