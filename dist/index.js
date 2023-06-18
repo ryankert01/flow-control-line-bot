@@ -39,7 +39,6 @@ function sendDangerousAreasMessages() {
     });
 }
 function handleEvent(event) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (event.type === 'follow') {
             const lineUserId = event.source.userId;
@@ -49,7 +48,7 @@ function handleEvent(event) {
         if (event.type === 'postback') {
             const lineUserId = event.source.userId;
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
-            const message = (_a = event.postback.data) === null || _a === void 0 ? void 0 : _a.text;
+            const message = event.postback.data;
             console.log(message);
             if (message[1] === '.') { // original place
                 const chosen = message.charCodeAt(0) - 48;
@@ -83,12 +82,30 @@ function handleEvent(event) {
                     console.log("update successful", chosen);
                     console.log(getUser);
                     const preferred_place = getUser.prefered_place;
-                    return client.replyMessage(event.replyToken, (0, message_1.getChoosePlaceMapMessage)(preferred_place, chosen));
+                    var getTraffic = yield prisma.traffic.findUnique({
+                        where: {
+                            id: preferred_place,
+                        },
+                    });
+                    if (getTraffic) {
+                        const choose_place_name = getTraffic.name;
+                        return client.replyMessage(event.replyToken, (0, message_1.getChoosePlaceMapMessage)(preferred_place, chosen, choose_place_name));
+                    }
                 }
             }
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
             const response = `You selected: ${message}, and your user id is ${current_user}`;
+            // Send the response back to the user
+            return client.replyMessage(replyToken, { type: 'text', text: response });
+        }
+        if (event.type === 'message') {
+            const message = event.message;
+            const lineUserId = event.source.userId;
+            const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
+            const replyToken = event.replyToken;
+            // Process the received message and prepare a response
+            const response = `You sent: ${message.text}, and your user id is ${current_user}`;
             // Send the response back to the user
             return client.replyMessage(replyToken, { type: 'text', text: response });
         }
