@@ -8,7 +8,7 @@ function getEvacuationMessage(suggestions: any):any {
             {
               "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
               "imageBackgroundColor": "#FFFFFF",
-              "title": `推薦疏散地點(1) ${suggestions[0]}`,
+              "title": `推薦疏散地點(1) \n${suggestions[0]}`,
               "text": "點選下方按鈕以選擇疏散地點",
               "defaultAction": {
                 "type": "uri",
@@ -26,7 +26,7 @@ function getEvacuationMessage(suggestions: any):any {
             {
               "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
               "imageBackgroundColor": "#000000",
-              "title": `推薦疏散地點(2) ${suggestions[1]}`,
+              "title": `推薦疏散地點(2) \n${suggestions[1]}`,
               "text": "點選下方按鈕以選擇疏散地點",
               "defaultAction": {
                 "type": "uri",
@@ -44,7 +44,7 @@ function getEvacuationMessage(suggestions: any):any {
             {
                 "thumbnailImageUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/1-1.png",
                 "imageBackgroundColor": "#000000",
-                "title": `推薦疏散地點(3) ${suggestions[2]}`,
+                "title": `推薦疏散地點(3) \n${suggestions[2]}`,
                 "text": "點選下方按鈕以選擇疏散地點",
                 "defaultAction": {
                   "type": "uri",
@@ -83,8 +83,8 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 
     return{
         "type": "imagemap",
-        "baseUrl": "https://example.com/images/",
-        "altText": "請選擇圖片",
+        "baseUrl": "https://content.shopback.com/tw/wp-content/uploads/2020/10/16151231/xingyi-shopping.jpg",
+        "altText": "如果你在下列位置，請點選圖片",
         "baseSize": {
           "width": 1040,
           "height": 1040
@@ -134,11 +134,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
         "text": {
             "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`
         }
-    }
-      
-      
-
-    
+    }    
     /*return {
         type: "text",
         text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
