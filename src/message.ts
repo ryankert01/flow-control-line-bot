@@ -83,7 +83,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 
     return{
         "type": "imagemap",
-        "baseUrl": "https://content.shopback.com/tw/wp-content/uploads/2020/10/16151231/xingyi-shopping.jpg",
+        "baseUrl": "https://github.com/ryankert01/flow-control-line-bot/tree/main/place_pic",
         "altText": "如果你在下列位置，請點選圖片",
         "baseSize": {
           "width": 1040,
