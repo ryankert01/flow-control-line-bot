@@ -65,25 +65,11 @@ function getEvacuationMessage(suggestions: any):any {
         }
       };
 }
-/*
-const images = [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Tower_of_Taipei_101%28cropped%29.jpg/250px-Tower_of_Taipei_101%28cropped%29.jpg',
-    'https://content.shopback.com/tw/wp-content/uploads/2020/10/16151231/xingyi-shopping.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Taipei_World_Trade_Center_International_Trade_Building_20090617.jpg/1200px-Taipei_World_Trade_Center_International_Trade_Building_20090617.jpg',
-    'https://cc.tvbs.com.tw/img/program/upload/2019/01/08/20190108174637-05aeede7.jpg',
-  ];
-  
-const locations = [
-    'Taipei 101', 
-    'Xinyi plaza', 
-    'Taipei trade center', 
-    'Breeze Nan Shan'
-];*/
 function getDangerousAreaMessage(dangerous_areas: any):any {
 
     return{
         "type": "imagemap",
-        "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/place_pic/",
+        "baseUrl": "https://github.com/ryankert01/flow-control-line-bot/tree/main/NewPicture",
         "altText": "如果你在下列位置，請點選圖片",
         "baseSize": {
           "width": 1040,
@@ -132,18 +118,11 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
           }
         ],
         "text": {
-            "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`
+            "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`,
+            "position": "top",
+            "align": "start"
         }
     }    
-    /*return {
-        type: "text",
-        text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
-安安，您在哪裡附近呢?:
-1. Taipei 101
-2. Xinyi plaza
-3. Taipei trade center
-4. Breeze Nan Shan`
-     };*/
 }
 
 // choose_place_id is the id of the place that user choose
