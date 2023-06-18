@@ -27,53 +27,6 @@ async function sendDangerousAreasMessages() {
   }
 }
 
-function getAdminMessage(): any {
-  var preferred_places, admin_traffic;
-  var num_of_places = 0, num_of_traffic = 0;
-  var num_of_users = 0, num_of_selected_traffic = 0, num_of_preferred_places = 0;
-  var msg = "";
-  prisma.user.findMany().then((users: User[]) => {
-    for (var user of users) {
-      if (user.prefered_place !== -1) 
-        num_of_preferred_places += 1;
-      if (user.chose_place !== -1)
-        num_of_selected_traffic += 1;
-    }
-    num_of_users = users.length;
-    msg += "Number of users: " + num_of_users + "\n";
-    msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
-    msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
-
-  });
-
-  
-  prisma.places.findMany().then((places: Places[]) => {
-    num_of_places = places.length;
-    preferred_places = "";
-    for (var place of places) {
-      preferred_places += place.name + ": " + place.chosen_Users_number+"\n";
-    }
-    msg += preferred_places;
-  });
-
-  
-
-  prisma.traffic.findMany().then((traffic: Traffic[]) => {
-    num_of_traffic = traffic.length;
-    admin_traffic = ""
-    for (var tra of traffic) {
-      admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
-    }
-    msg += admin_traffic;
-  });
-
-  
-
-  return {
-    type: 'text',
-    text: msg,
-  };
-}
 
 async function handleEvent(event: WebhookEvent) {
 
@@ -154,7 +107,45 @@ async function handleEvent(event: WebhookEvent) {
     // Process the received message and prepare a response
 
     if (message.text === 'admin') {
-      return client.replyMessage(replyToken, await getAdminMessage());
+      var preferred_places, admin_traffic;
+      var num_of_places = 0, num_of_traffic = 0;
+      var num_of_users = 0, num_of_selected_traffic = 0, num_of_preferred_places = 0;
+      var msg = "";
+      await prisma.user.findMany().then((users: User[]) => {
+        for (var user of users) {
+          if (user.prefered_place !== -1) 
+            num_of_preferred_places += 1;
+          if (user.chose_place !== -1)
+            num_of_selected_traffic += 1;
+        }
+        num_of_users = users.length;
+        msg += "Number of users: " + num_of_users + "\n";
+        msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
+        msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
+
+      });
+
+      
+      await prisma.places.findMany().then((places: Places[]) => {
+        num_of_places = places.length;
+        preferred_places = "";
+        for (var place of places) {
+          preferred_places += place.name + ": " + place.chosen_Users_number+"\n";
+        }
+        msg += preferred_places;
+      });
+
+      
+
+      await prisma.traffic.findMany().then((traffic: Traffic[]) => {
+        num_of_traffic = traffic.length;
+        admin_traffic = ""
+        for (var tra of traffic) {
+          admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
+        }
+        msg += admin_traffic;
+      });
+      return client.replyMessage(replyToken, { type: 'text', text: msg });
     }
 
     const response = `You sent: ${message.text}, and your user id is ${current_user}`;
