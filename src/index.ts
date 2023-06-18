@@ -132,7 +132,10 @@ async function handleEvent(event: WebhookEvent) {
         for (var place of places) {
           preferred_places += place.name + ": " + place.chosen_Users_number+"\n";
         }
+
+        msg += "用戶位置：\n"
         msg += preferred_places;
+        msg += "\n";
       });
 
       
@@ -143,7 +146,9 @@ async function handleEvent(event: WebhookEvent) {
         for (var tra of traffic) {
           admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
         }
+        msg += "用戶選擇交通：\n"
         msg += admin_traffic;
+        msg += "\n";
       });
       return client.replyMessage(replyToken, { type: 'text', text: msg });
     }
