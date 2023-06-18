@@ -122,7 +122,7 @@ async function handleEvent(event: WebhookEvent) {
         msg += "Number of users: " + num_of_users + "\n";
         msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
         msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
-
+        msg += "\n";
       });
 
       
