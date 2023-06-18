@@ -40,21 +40,23 @@ function getAdminMessage(): any {
         num_of_selected_traffic += 1;
     }
     num_of_users = users.length;
+    msg += "Number of users: " + num_of_users + "\n";
+    msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
+    msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
+
   });
 
-  msg += "Number of users: " + num_of_users + "\n";
-  msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
-  msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
-
+  
   prisma.places.findMany().then((places: Places[]) => {
     num_of_places = places.length;
     preferred_places = "";
     for (var place of places) {
       preferred_places += place.name + ": " + place.chosen_Users_number+"\n";
     }
+    msg += preferred_places;
   });
 
-  msg += preferred_places;
+  
 
   prisma.traffic.findMany().then((traffic: Traffic[]) => {
     num_of_traffic = traffic.length;
@@ -62,9 +64,10 @@ function getAdminMessage(): any {
     for (var tra of traffic) {
       admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
     }
+    msg += admin_traffic;
   });
 
-  msg += admin_traffic;
+  
 
   return {
     type: 'text',
