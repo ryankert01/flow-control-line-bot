@@ -148,7 +148,6 @@ async function handleEvent(event: WebhookEvent) {
         }
         msg += "用戶選擇交通：\n"
         msg += admin_traffic;
-        msg += "\n";
       });
       return client.replyMessage(replyToken, { type: 'text', text: msg });
     }
