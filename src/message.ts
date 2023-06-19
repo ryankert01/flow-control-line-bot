@@ -56,7 +56,7 @@ function getEvacuationMessage(suggestions: any):any {
         "type": "carousel",
         "columns": [
           {
-            "thumbnailImageUrl": evac_image[0],
+            "thumbnailImageUrl": evac_image[1],
             "imageBackgroundColor": "#FFFFFF",
             "title": `推薦疏散地點(1) \n${suggestions[0]}`,
             "text": "點選下方按鈕以選擇疏散地點",
@@ -74,7 +74,7 @@ function getEvacuationMessage(suggestions: any):any {
             ]
           },
           {
-            "thumbnailImageUrl": evac_image[1],
+            "thumbnailImageUrl": evac_image[2],
             "imageBackgroundColor": "#000000",
             "title": `推薦疏散地點(2) \n${suggestions[1]}`,
             "text": "點選下方按鈕以選擇疏散地點",
@@ -92,7 +92,7 @@ function getEvacuationMessage(suggestions: any):any {
             ]
           },
           {
-              "thumbnailImageUrl": evac_image[2],
+              "thumbnailImageUrl": evac_image[3],
               "imageBackgroundColor": "#000000",
               "title": `推薦疏散地點(3) \n${suggestions[2]}`,
               "text": "點選下方按鈕以選擇疏散地點",
