@@ -78,7 +78,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
         "actions": [
           {
             "type": "message",
-            "text": "您點擊了圖片 1",
+            "text": "您點擊了 Taipei 101",
             "area": {
               "x": 0,
               "y": 0,
@@ -88,7 +88,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
           },
           {
             "type": "message",
-            "text": "您點擊了圖片 2",
+            "text": "您點擊了圖片 Xinyi plaza",
             "area": {
               "x": 520,
               "y": 0,
@@ -98,7 +98,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
           },
           {
             "type": "message",
-            "text": "您點擊了圖片 3",
+            "text": "您點擊了圖片 Taipei world trade center",
             "area": {
               "x": 0,
               "y": 520,
@@ -108,7 +108,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
           },
           {
             "type": "message",
-            "text": "您點擊了圖片 4",
+            "text": "您點擊了圖片 Breeze Nan San",
             "area": {
               "x": 520,
               "y": 520,
@@ -116,12 +116,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
               "height": 520
             }
           }
-        ],
-        "text": {
-            "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`,
-            "position": "top",
-            "align": "start"
-        }
+        ]
     }    
 }
 
