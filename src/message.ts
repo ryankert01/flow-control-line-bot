@@ -131,7 +131,7 @@ function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: number
     choose_place_name = choose_place_name.replace(/ /g, '+');
     return {
         "type": "template",
-        "altText": "Image with URL",
+        "altText": "這是替您規劃的疏散路線指引",
         "template": {
           "type": "image_carousel",
           "columns": [
