@@ -1,7 +1,7 @@
 function getEvacuationMessage(suggestions: any):any {
     return {
         "type": "template",
-        "altText": "this is a carousel template",
+        "altText": "請選擇一個疏散地點",
         "template": {
           "type": "carousel",
           "columns": [
