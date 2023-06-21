@@ -219,7 +219,7 @@ app.get('/places', async (req, res) => {
 
 // an api that response with users data
 // using json 
-app.get('/users', async (req, res) => {
+app.post('/users', async (req, res) => {
   const users = await prisma.user.findMany();
   res.status(200).json(users);
 });
