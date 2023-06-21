@@ -221,7 +221,7 @@ app.post('/dangerous', (req, res) => {
 
 // an api that response with the number of people in each traffic
 // using json
-app.get('/traffic', async (req, res) => {
+app.post('/traffic', async (req, res) => {
   const traffic = await getTraffic(prisma);
   res.status(200).json(traffic);
 });
