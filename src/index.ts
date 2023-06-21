@@ -104,6 +104,22 @@ async function handleEvent(event: WebhookEvent) {
     const current_user = await add_user(lineUserId, prisma)
 
     const replyToken = event.replyToken!;
+    if (message[1] === '在') { // original place
+      const chosen = message.charCodeAt(2) - 48;
+      orig_places[chosen] += 1;
+      updateTraffic(chosen, orig_places[chosen], prisma);
+      var getUser: User | null = await prisma.user.findUnique({
+        where: {
+          lineId: lineUserId,
+        },
+      });
+      console.log(getUser);
+      if (getUser) {
+        updateUser(lineUserId, chosen, prisma);
+        console.log("update successful", chosen);
+      }
+    }
+    
     // Process the received message and prepare a response
 
     if (message.text === 'admin') {
