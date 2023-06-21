@@ -105,6 +105,45 @@ function handleEvent(event) {
             const current_user = yield (0, utils_1.add_user)(lineUserId, prisma);
             const replyToken = event.replyToken;
             // Process the received message and prepare a response
+            if (message.text === 'admin') {
+                var preferred_places, admin_traffic;
+                var num_of_places = 0, num_of_traffic = 0;
+                var num_of_users = 0, num_of_selected_traffic = 0, num_of_preferred_places = 0;
+                var msg = "";
+                yield prisma.user.findMany().then((users) => {
+                    for (var user of users) {
+                        if (user.prefered_place !== -1)
+                            num_of_preferred_places += 1;
+                        if (user.chose_place !== -1)
+                            num_of_selected_traffic += 1;
+                    }
+                    num_of_users = users.length;
+                    msg += "Number of users: " + num_of_users + "\n";
+                    msg += "Number of users who have chosen traffic: " + num_of_selected_traffic + "\n";
+                    msg += "Number of users who have chosen preferred places: " + num_of_preferred_places + "\n";
+                    msg += "\n";
+                });
+                yield prisma.places.findMany().then((places) => {
+                    num_of_places = places.length;
+                    preferred_places = "";
+                    for (var place of places) {
+                        preferred_places += place.name + ": " + place.chosen_Users_number + "\n";
+                    }
+                    msg += "用戶位置：\n";
+                    msg += preferred_places;
+                    msg += "\n";
+                });
+                yield prisma.traffic.findMany().then((traffic) => {
+                    num_of_traffic = traffic.length;
+                    admin_traffic = "";
+                    for (var tra of traffic) {
+                        admin_traffic += tra.name + ": " + tra.chosen_Users_number + " \n";
+                    }
+                    msg += "用戶選擇交通：\n";
+                    msg += admin_traffic;
+                });
+                return client.replyMessage(replyToken, { type: 'text', text: msg });
+            }
             const response = `You sent: ${message.text}, and your user id is ${current_user}`;
             // Send the response back to the user
             return client.replyMessage(replyToken, { type: 'text', text: response });
