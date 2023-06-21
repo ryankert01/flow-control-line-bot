@@ -119,7 +119,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 
   return{
       "type": "imagemap",
-      "baseUrl": "https://github.com/ryankert01/flow-control-line-bot/tree/main/NewPicture/",
+      "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/Picture/",
       "altText": "如果你在下列位置，請點選圖片",
       "baseSize": {
         "width": 1040,
