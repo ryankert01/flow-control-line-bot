@@ -81,61 +81,61 @@ const locations = [
 ];*/
 function getDangerousAreaMessage(dangerous_areas: any):any {
 
-    return{
-        "type": "imagemap",
-        "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/NewPicture/",
-        "altText": "如果你在下列位置，請點選圖片",
-        "baseSize": {
-          "width": 1040,
-          "height": 1040
-        },
-        "actions": [
-          {
-            "type": "message",
-            "text": "您點擊了圖片 1",
-            "area": {
-              "x": 0,
-              "y": 0,
-              "width": 520,
-              "height": 520
-            }
-          },
-          {
-            "type": "message",
-            "text": "您點擊了圖片 2",
-            "area": {
-              "x": 520,
-              "y": 0,
-              "width": 520,
-              "height": 520
-            }
-          },
-          {
-            "type": "message",
-            "text": "您點擊了圖片 3",
-            "area": {
-              "x": 0,
-              "y": 520,
-              "width": 520,
-              "height": 520
-            }
-          },
-          {
-            "type": "message",
-            "text": "您點擊了圖片 4",
-            "area": {
-              "x": 520,
-              "y": 520,
-              "width": 520,
-              "height": 520
-            }
-          }
-        ],
-        "text": {
-            "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`
-        }
-    }    
-    /*return {
+    // return{
+    //     "type": "imagemap",
+    //     "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/NewPicture/",
+    //     "altText": "如果你在下列位置，請點選圖片",
+    //     "baseSize": {
+    //       "width": 1040,
+    //       "height": 1040
+    //     },
+    //     "actions": [
+    //       {
+    //         "type": "message",
+    //         "text": "您點擊了圖片 1",
+    //         "area": {
+    //           "x": 0,
+    //           "y": 0,
+    //           "width": 520,
+    //           "height": 520
+    //         }
+    //       },
+    //       {
+    //         "type": "message",
+    //         "text": "您點擊了圖片 2",
+    //         "area": {
+    //           "x": 520,
+    //           "y": 0,
+    //           "width": 520,
+    //           "height": 520
+    //         }
+    //       },
+    //       {
+    //         "type": "message",
+    //         "text": "您點擊了圖片 3",
+    //         "area": {
+    //           "x": 0,
+    //           "y": 520,
+    //           "width": 520,
+    //           "height": 520
+    //         }
+    //       },
+    //       {
+    //         "type": "message",
+    //         "text": "您點擊了圖片 4",
+    //         "area": {
+    //           "x": 520,
+    //           "y": 520,
+    //           "width": 520,
+    //           "height": 520
+    //         }
+    //       }
+    //     ],
+    //     "text": {
+    //         "text": `We found these areas ${dangerous_areas.join(', ')} is dangerous! \nif you are in following places\nPlease click one image to select !`
+    //     }
+    // }    
+    return {
         type: "text",
         text: `You are in a dangerous area! Please avoid the following areas: ${dangerous_areas.join(', ')}
 安安，您在哪裡附近呢?:
@@ -143,7 +143,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 2. Xinyi plaza
 3. Taipei trade center
 4. Breeze Nan Shan`
-     };*/
+     };
 }
 
 // choose_place_id is the id of the place that user choose
