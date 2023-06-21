@@ -141,6 +141,17 @@ async function handleEvent(event: WebhookEvent) {
         msg += "\n";
       });
 
+      await prisma.traffic.findMany().then((traffic: Traffic[]) => {
+        num_of_traffic = traffic.length;
+        admin_traffic = ""
+        for (var tra of traffic) {
+          admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
+        }
+        msg += "用戶位置：\n"
+        msg += admin_traffic;
+        msg += "\n";
+      });
+
       
       await prisma.places.findMany().then((places: Places[]) => {
         num_of_places = places.length;
@@ -149,22 +160,12 @@ async function handleEvent(event: WebhookEvent) {
           preferred_places += place.name + ": " + place.chosen_Users_number+"\n";
         }
 
-        msg += "用戶位置：\n"
+        msg += "用戶選擇交通：\n"
         msg += preferred_places;
-        msg += "\n";
+        
       });
 
       
-
-      await prisma.traffic.findMany().then((traffic: Traffic[]) => {
-        num_of_traffic = traffic.length;
-        admin_traffic = ""
-        for (var tra of traffic) {
-          admin_traffic += tra.name + ": " + tra.chosen_Users_number+" \n";
-        }
-        msg += "用戶選擇交通：\n"
-        msg += admin_traffic;
-      });
       return client.replyMessage(replyToken, { type: 'text', text: msg });
     }
 
