@@ -1,4 +1,4 @@
-function getEvacuationMessage(suggestions: any):any {
+function getEvacuationMessage(suggestions: any):any { // hi
     return {
         "type": "template",
         "altText": "this is a carousel template",
