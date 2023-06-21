@@ -104,8 +104,8 @@ async function handleEvent(event: WebhookEvent) {
     const current_user = await add_user(lineUserId, prisma)
 
     const replyToken = event.replyToken!;
-    if (message[3] === '.') { // original place
-      const chosen = message.charCodeAt(2) - 48;
+    if (message.text[3] === '.') { // original place
+      const chosen = message.text.charCodeAt(2) - 48;
       orig_places[chosen] += 1;
       updateTraffic(chosen, orig_places[chosen], prisma);
       var getUser: User | null = await prisma.user.findUnique({
