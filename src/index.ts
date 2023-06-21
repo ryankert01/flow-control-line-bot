@@ -104,7 +104,7 @@ async function handleEvent(event: WebhookEvent) {
     const current_user = await add_user(lineUserId, prisma)
 
     const replyToken = event.replyToken!;
-    if (message[1] === '在') { // original place
+    if (message[3] === '.') { // original place
       const chosen = message.charCodeAt(2) - 48;
       orig_places[chosen] += 1;
       updateTraffic(chosen, orig_places[chosen], prisma);
