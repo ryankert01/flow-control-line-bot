@@ -228,7 +228,7 @@ app.get('/traffic', async (req, res) => {
 
 // an api that response with the number of people in each place
 // using json
-app.get('/places', async (req, res) => {
+app.post('/places', async (req, res) => {
   const places = await getPlaces(prisma);
   res.status(200).json(places);
 });
