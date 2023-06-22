@@ -47,8 +47,8 @@ async function handleEvent(event: WebhookEvent) {
     console.log(message)
     if (message[1] === '.') { // original place
       const chosen = message.charCodeAt(0) - 48;
-      orig_places[chosen] += 1;
-      updateTraffic(chosen, orig_places[chosen], prisma);
+      
+      
       var getUser: User | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
@@ -56,6 +56,25 @@ async function handleEvent(event: WebhookEvent) {
       });
       console.log(getUser);
       if (getUser) {
+        var chose_place: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: chosen,
+          },
+        });
+        var orig_places: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: getUser.prefered_place,
+          },
+        })
+        var chose_place_num, orig_place_num;
+        if (chose_place) {
+          chose_place_num = chose_place.chosen_Users_number + 1;
+          updateTraffic(chosen, chose_place_num, prisma);
+        }
+        if (orig_places) {
+          orig_place_num = orig_places.chosen_Users_number - 1;
+          updateTraffic(chosen, orig_place_num, prisma);
+        }
         updateUser(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
@@ -64,7 +83,6 @@ async function handleEvent(event: WebhookEvent) {
       if (message[2] !== ']') {
         chosen = chosen * 10 + message.charCodeAt(2) - 48;
       }
-      evac_places[chosen] += 1;
       
       var getUser: User | null = await prisma.user.findUnique({
         where: {
@@ -72,11 +90,25 @@ async function handleEvent(event: WebhookEvent) {
         },
       });
       if (getUser) {
-        if (getUser.prefered_place > 0) {
-          evac_places[getUser.prefered_place] -= 1;
-          updatePlace(getUser.prefered_place, evac_places[getUser.prefered_place], prisma);
+        var chose_place: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: chosen,
+          },
+        });
+        var orig_places: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: getUser.chose_place,
+          },
+        })
+        var chose_place_num, orig_place_num;
+        if (chose_place) {
+          chose_place_num = chose_place.chosen_Users_number + 1;
+          updatePlace(chosen, chose_place_num, prisma);
         }
-        updatePlace(chosen, evac_places[chosen], prisma);
+        if (orig_places) {
+          orig_place_num = orig_places.chosen_Users_number - 1;
+          updatePlace(chosen, orig_place_num, prisma);
+        }
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
         console.log(getUser)
@@ -111,7 +143,6 @@ async function handleEvent(event: WebhookEvent) {
     const replyToken = event.replyToken!;
     if (message.text[3] === '.') { // original place
       const chosen = message.text.charCodeAt(2) - 48;
-      orig_places[chosen] += 1;
       
       var getUser: User | null = await prisma.user.findUnique({
         where: {
@@ -119,14 +150,28 @@ async function handleEvent(event: WebhookEvent) {
         },
       });
       
+      
       console.log(getUser);
       if (getUser) {
-        if (getUser.chose_place > 0) {
-          orig_places[getUser.chose_place] -= 1;
-          updateTraffic(getUser.chose_place, orig_places[getUser.chose_place], prisma);
+        var chose_place: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: chosen,
+          },
+        });
+        var orig_places: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: getUser.prefered_place,
+          },
+        })
+        var chose_place_num, orig_place_num;
+        if (chose_place) {
+          chose_place_num = chose_place.chosen_Users_number + 1;
+          updateTraffic(chosen, chose_place_num, prisma);
         }
-        updateTraffic(chosen, orig_places[chosen], prisma);
-        updateUser(lineUserId, chosen, prisma);
+        if (orig_places) {
+          orig_place_num = orig_places.chosen_Users_number - 1;
+          updateTraffic(chosen, orig_place_num, prisma);
+        }
         console.log("update successful", chosen);
       }
     }
@@ -188,8 +233,8 @@ async function handleEvent(event: WebhookEvent) {
 
 // global variables
 var dangerous_areas: string[] = [];
-var orig_places: number[] = [0, 0, 0, 0, 0];
-var evac_places: number[] = [0, 0, 0, 0, 0];
+// var orig_places: number[] = [0, 0, 0, 0, 0];
+// var evac_places: number[] = [0, 0, 0, 0, 0];
 var suggestions: string[] = ["", "", "", "", ""];
 var evac_names: string[] = ["", "Taipei 101", "Taipei city hall", "Taipei 101 World Trade Center station", "101 international shopping center station"];
 
@@ -308,19 +353,19 @@ You can go to :
   }
 });
 
-// load data from database to global variables evac_places and orig_places
-async function loadData() {
-  const places = await getPlaces(prisma);
-  const traffic = await getTraffic(prisma);
-  for (const place of places) {
-    orig_places[place.id] = place.chosen_Users_number;
-  }
-  for (const tra of traffic) {
-    evac_places[tra.id] = tra.chosen_Users_number;
-  }
-}
+// // load data from database to global variables evac_places and orig_places
+// async function loadData() {
+//   const places = await getPlaces(prisma);
+//   const traffic = await getTraffic(prisma);
+//   for (const place of places) {
+//     orig_places[place.id] = place.chosen_Users_number;
+//   }
+//   for (const tra of traffic) {
+//     evac_places[tra.id] = tra.chosen_Users_number;
+//   }
+// }
 
-loadData();
+// loadData();
 
 
 app.listen(3000, () => {
