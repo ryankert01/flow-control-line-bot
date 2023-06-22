@@ -29,14 +29,6 @@ async function sendDangerousAreasMessages() {
 
 
 async function handleEvent(event: WebhookEvent) {
-
-  
-  if (event.type === 'follow') {
-    const lineUserId = event.source.userId!;
-
-    const current_user = await add_user(lineUserId, prisma)
-    client.pushMessage(lineUserId, { type: 'text', text: `Your user id is ${current_user}` });
-  }
   
   if (event.type === 'postback') {
     const lineUserId = event.source.userId!;
