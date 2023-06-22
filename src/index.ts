@@ -58,7 +58,7 @@ async function handleEvent(event: WebhookEvent) {
       });
       if (getUser) {
         try {
-          await prisma.traffic.update({
+          await prisma.places.update({
             where: {
               id: chosen,
             },
@@ -73,7 +73,7 @@ async function handleEvent(event: WebhookEvent) {
         }
         if(getUser.prefered_place>0) {
           try {
-            await prisma.traffic.update({
+            await prisma.places.update({
               where: {
                 id: getUser.prefered_place,
               },
