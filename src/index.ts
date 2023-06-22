@@ -257,7 +257,7 @@ app.post('/evacuation', async (req, res) => {
       continue;
     }
     if (body.resendMessage) {
-      await client.pushMessage(lineUserId, { type: 'text', text: ”推薦地點更新：“ });
+      await client.pushMessage(lineUserId, { type: 'text', text: ”推薦地點更新！請重新選擇：“ });
     }
     await client.pushMessage(lineUserId, getEvacuationMessage(suggestions));
   }
