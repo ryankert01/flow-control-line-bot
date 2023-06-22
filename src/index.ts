@@ -72,8 +72,10 @@ async function handleEvent(event: WebhookEvent) {
         },
       });
       if (getUser) {
-        evac_places[getUser.prefered_place] -= 1;
-        updatePlace(getUser.prefered_place, evac_places[getUser.prefered_place], prisma);
+        if (getUser.prefered_place > 0) {
+          evac_places[getUser.prefered_place] -= 1;
+          updatePlace(getUser.prefered_place, evac_places[getUser.prefered_place], prisma);
+        }
         updatePlace(chosen, evac_places[chosen], prisma);
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
@@ -119,8 +121,10 @@ async function handleEvent(event: WebhookEvent) {
       
       console.log(getUser);
       if (getUser) {
-        orig_places[getUser.chose_place] -= 1;
-        updateTraffic(getUser.chose_place, orig_places[getUser.chose_place], prisma);
+        if (getUser.chose_place > 0) {
+          orig_places[getUser.chose_place] -= 1;
+          updateTraffic(getUser.chose_place, orig_places[getUser.chose_place], prisma);
+        }
         updateTraffic(chosen, orig_places[chosen], prisma);
         updateUser(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
