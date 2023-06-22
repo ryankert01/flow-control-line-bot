@@ -304,21 +304,22 @@ You can go to :
   }
 });
 
+// load data from database to global variables evac_places and orig_places
+async function loadData() {
+  const places = await getPlaces(prisma);
+  const traffic = await getTraffic(prisma);
+  for (const place of places) {
+    orig_places[place.id] = place.chosen_Users_number;
+  }
+  for (const tra of traffic) {
+    evac_places[tra.id] = tra.chosen_Users_number;
+  }
+}
+
+loadData();
+
 
 app.listen(3000, () => {
   console.log('Line bot is running on port 3000');
 });
 
-async function getTrafficcc(prisma: PrismaClient){
-  var getUser: User | null = await prisma.user.findUnique({
-    where: {
-      lineId: "Ucd211142498029852cb840019b85b1f7",
-    },
-  });
-  var preferedPlace = null
-  if(getUser)
-    preferedPlace = getUser.prefered_place;
-
-}
-
-getTrafficcc(prisma);
