@@ -74,7 +74,7 @@ async function handleEvent(event: WebhookEvent) {
         })
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
-          updatePlace(chosen, orig_place_num, prisma);
+          updatePlace(getUser.chose_place, orig_place_num, prisma);
         }
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
