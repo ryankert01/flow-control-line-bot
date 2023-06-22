@@ -71,11 +71,11 @@ async function handleEvent(event: WebhookEvent) {
         } catch (error) {
           console.error('Error updating place:', error);
         }
-        if(getUser.prefered_place>0) {
+        if(getUser.chose_place > 0) {
           try {
             await prisma.places.update({
               where: {
-                id: getUser.prefered_place,
+                id: getUser.chose_place,
               },
               data: {
                 chosen_Users_number: {
