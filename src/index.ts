@@ -62,6 +62,7 @@ async function handleEvent(event: WebhookEvent) {
             id: chosen,
           },
         });
+        console.log('chose_place: ', chose_place)
         var chose_place_num, orig_place_num;
         if (chose_place) {
           chose_place_num = chose_place.chosen_Users_number + 1;
@@ -72,13 +73,14 @@ async function handleEvent(event: WebhookEvent) {
             id: getUser.chose_place,
           },
         })
+        console.log('orig_places: ', orig_places)
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
           await updatePlace(getUser.chose_place, orig_place_num, prisma);
         }
         await updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
-        console.log(getUser)
+        //console.log(getUser)
         const preferred_place: number = getUser.prefered_place;
         var getTraffic: Traffic | null = await prisma.traffic.findUnique({
           where: {
