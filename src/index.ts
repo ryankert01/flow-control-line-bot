@@ -57,26 +57,35 @@ async function handleEvent(event: WebhookEvent) {
         },
       });
       if (getUser) {
-        var chose_place: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: chosen,
-          },
-        });
-        console.log('chose_place: ', chose_place)
-        var chose_place_num, orig_place_num;
-        if (chose_place) {
-          chose_place_num = chose_place.chosen_Users_number + 1;
-          await updatePlace(chosen, chose_place_num, prisma);
+        try {
+          await prisma.traffic.update({
+            where: {
+              id: chosen,
+            },
+            data: {
+              chosen_Users_number: {
+                increment: 1,
+              },
+            },
+          });
+        } catch (error) {
+          console.error('Error updating place:', error);
         }
-        var orig_places: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: getUser.chose_place,
-          },
-        })
-        console.log('orig_places: ', orig_places)
-        if (orig_places) {
-          orig_place_num = orig_places.chosen_Users_number - 1;
-          await updatePlace(getUser.chose_place, orig_place_num, prisma);
+        if(getUser.prefered_place>0) {
+          try {
+            await prisma.traffic.update({
+              where: {
+                id: getUser.prefered_place,
+              },
+              data: {
+                chosen_Users_number: {
+                  decrement: 1,
+                },
+              },
+            });
+          } catch (error) {
+            console.error('Error updating place:', error);
+          }
         }
         await updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
@@ -122,26 +131,36 @@ async function handleEvent(event: WebhookEvent) {
       
       console.log(getUser);
       if (getUser) {
-        var chose_place: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: chosen,
-          },
-        });
-        
-        var chose_place_num, orig_place_num;
-        if (chose_place) {
-          chose_place_num = chose_place.chosen_Users_number + 1;
-          await updateTraffic(chosen, chose_place_num, prisma);
+        try { 
+          await prisma.traffic.update({
+            where: {
+              id: chosen,
+            },
+            data: {
+              chosen_Users_number: {
+                increment: 1,
+              },
+            },
+          });
+        } catch (err) {
+          console.log(err);
         }
-        var orig_places: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: getUser.prefered_place,
-          },
-        })
-        if (orig_places) {
-          orig_place_num = orig_places.chosen_Users_number - 1;
-          await updateTraffic(getUser.prefered_place, orig_place_num, prisma);
-        }
+        if (getUser.prefered_place > 0) {
+          try {
+            await prisma.traffic.update({
+              where: {
+                id: getUser.prefered_place,
+              },
+              data: {
+                chosen_Users_number: {
+                  decrement: 1,
+                },
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } 
         await updateUser(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
