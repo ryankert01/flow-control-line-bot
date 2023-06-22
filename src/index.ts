@@ -61,16 +61,17 @@ async function handleEvent(event: WebhookEvent) {
             id: chosen,
           },
         });
-        var orig_places: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: getUser.prefered_place,
-          },
-        })
+        
         var chose_place_num, orig_place_num;
         if (chose_place) {
           chose_place_num = chose_place.chosen_Users_number + 1;
           updateTraffic(chosen, chose_place_num, prisma);
         }
+        var orig_places: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: getUser.prefered_place,
+          },
+        });
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
           updateTraffic(chosen, orig_place_num, prisma);
@@ -95,16 +96,16 @@ async function handleEvent(event: WebhookEvent) {
             id: chosen,
           },
         });
-        var orig_places: Traffic | null = await prisma.traffic.findUnique({
-          where: {
-            id: getUser.chose_place,
-          },
-        })
         var chose_place_num, orig_place_num;
         if (chose_place) {
           chose_place_num = chose_place.chosen_Users_number + 1;
           updatePlace(chosen, chose_place_num, prisma);
         }
+        var orig_places: Traffic | null = await prisma.traffic.findUnique({
+          where: {
+            id: getUser.chose_place,
+          },
+        })
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
           updatePlace(chosen, orig_place_num, prisma);
