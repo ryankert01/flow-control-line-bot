@@ -65,7 +65,7 @@ async function handleEvent(event: WebhookEvent) {
         var chose_place_num, orig_place_num;
         if (chose_place) {
           chose_place_num = chose_place.chosen_Users_number + 1;
-          updatePlace(chosen, chose_place_num, prisma);
+          await updatePlace(chosen, chose_place_num, prisma);
         }
         var orig_places: Traffic | null = await prisma.traffic.findUnique({
           where: {
@@ -74,9 +74,9 @@ async function handleEvent(event: WebhookEvent) {
         })
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
-          updatePlace(getUser.chose_place, orig_place_num, prisma);
+          await updatePlace(getUser.chose_place, orig_place_num, prisma);
         }
-        updateUser2(lineUserId, chosen, prisma);
+        await updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
         console.log(getUser)
         const preferred_place: number = getUser.prefered_place;
@@ -125,21 +125,22 @@ async function handleEvent(event: WebhookEvent) {
             id: chosen,
           },
         });
+        
+        var chose_place_num, orig_place_num;
+        if (chose_place) {
+          chose_place_num = chose_place.chosen_Users_number + 1;
+          await updateTraffic(chosen, chose_place_num, prisma);
+        }
         var orig_places: Traffic | null = await prisma.traffic.findUnique({
           where: {
             id: getUser.prefered_place,
           },
         })
-        var chose_place_num, orig_place_num;
-        if (chose_place) {
-          chose_place_num = chose_place.chosen_Users_number + 1;
-          updateTraffic(chosen, chose_place_num, prisma);
-        }
         if (orig_places) {
           orig_place_num = orig_places.chosen_Users_number - 1;
-          updateTraffic(getUser.prefered_place, orig_place_num, prisma);
+          await updateTraffic(getUser.prefered_place, orig_place_num, prisma);
         }
-        updateUser(lineUserId, chosen, prisma);
+        await updateUser(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
     }
