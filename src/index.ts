@@ -169,9 +169,9 @@ async function handleEvent(event: WebhookEvent) {
       return client.replyMessage(replyToken, { type: 'text', text: msg });
     }
 
-    const response = `You sent: ${message.text}, and your user id is ${current_user}`;
-    // Send the response back to the user
-    return client.replyMessage(replyToken, { type: 'text', text: response });
+    // const response = `You sent: ${message.text}, and your user id is ${current_user}`;
+    // // Send the response back to the user
+    // return client.replyMessage(replyToken, { type: 'text', text: response });
   }
 }
 
@@ -249,12 +249,15 @@ app.post('/evacuation', async (req, res) => {
   res.status(200).json({ message: 'Evacuation received successfully' });
   
   // loop through all user
-  for(const user of body) {
+  for(const user of body.suggest_info) {
     const lineUserId = user.lineId;
     const suggestions = user.suggestion;
     console.log("sending evacuation message to: ", lineUserId);
     if (!lineUserId) { // impossible
       continue;
+    }
+    if (body.resendMessage) {
+      await client.pushMessage(lineUserId, { type: 'text', text: ”推薦地點更新：“ });
     }
     await client.pushMessage(lineUserId, getEvacuationMessage(suggestions));
   }
