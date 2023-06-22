@@ -65,13 +65,16 @@ async function handleEvent(event: WebhookEvent) {
         chosen = chosen * 10 + message.charCodeAt(2) - 48;
       }
       evac_places[chosen] += 1;
-      updatePlace(chosen, evac_places[chosen], prisma);
+      
       var getUser: User | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
         },
       });
       if (getUser) {
+        evac_places[getUser.prefered_place] -= 1;
+        updatePlace(getUser.prefered_place, evac_places[getUser.prefered_place], prisma);
+        updatePlace(chosen, evac_places[chosen], prisma);
         updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
         console.log(getUser)
@@ -107,14 +110,18 @@ async function handleEvent(event: WebhookEvent) {
     if (message.text[3] === '.') { // original place
       const chosen = message.text.charCodeAt(2) - 48;
       orig_places[chosen] += 1;
-      updateTraffic(chosen, orig_places[chosen], prisma);
+      
       var getUser: User | null = await prisma.user.findUnique({
         where: {
           lineId: lineUserId,
         },
       });
+      
       console.log(getUser);
       if (getUser) {
+        orig_places[getUser.chose_place] -= 1;
+        updateTraffic(getUser.chose_place, orig_places[getUser.chose_place], prisma);
+        updateTraffic(chosen, orig_places[chosen], prisma);
         updateUser(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
       }
