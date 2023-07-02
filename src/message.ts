@@ -119,7 +119,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 
   return{
       "type": "imagemap",
-      "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/Picture/",
+      "baseUrl": "https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/Update-picture/",
       "altText": "如果你在下列位置，請點選圖片",
       "baseSize": {
         "width": 1040,
@@ -138,7 +138,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
         },
         {
           "type": "message",
-          "text": "我在2. Xinyi plaza",
+          "text": "我在2. Breeze Nan San",
           "area": {
             "x": 520,
             "y": 0,
@@ -148,22 +148,22 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
         },
         {
           "type": "message",
-          "text": "我在3. taipei world trade center",
+          "text": "我在3. Xinyi plaza",
           "area": {
             "x": 0,
             "y": 520,
             "width": 520,
-            "height": 520
+            "height": 434
           }
         },
         {
           "type": "message",
-          "text": "我在4. Breeze Nan San",
+          "text": "我在4. taipei world trade center",
           "area": {
             "x": 520,
             "y": 520,
             "width": 520,
-            "height": 520
+            "height": 434
           }
         }
       ],
