@@ -184,7 +184,7 @@ function getDangerousAreaMessage(dangerous_areas: any):any {
 }
 
 // choose_place_id is the id of the place that user choose
-function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: number, choose_place_name: String):any {
+function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: number, choose_place_name: string):any {
   // replace all the space with '+' in the place name
   choose_place_name = choose_place_name.replace(/ /g, '+');
   return {
@@ -194,11 +194,11 @@ function getChoosePlaceMapMessage(prefered_place:number, choose_place_id: number
         "type": "image_carousel",
         "columns": [
           {
-            "imageUrl": encodeURI(`https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/${prefered_place}-${choose_place_id}.png`),
+            "imageUrl": `https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/${prefered_place}-${choose_place_id}.png`,
             "action": {
               "type": "uri",
               "label": "Navigate",
-              "uri": encodeURI(`https://www.google.com/maps/dir/?api=1&origin=%E7%9B%AE%E5%89%8D%E6%89%80%E5%9C%A8%E4%BD%8D%E7%BD%AE&destination=${choose_place_name}&travelmode=walking&dir_action=navigate`)
+              "uri": `https://www.google.com/maps/dir/?api=1&origin=%E7%9B%AE%E5%89%8D%E6%89%80%E5%9C%A8%E4%BD%8D%E7%BD%AE&destination=${encodeURI(choose_place_name)}&travelmode=walking&dir_action=navigate`
             }
           }
         ]
