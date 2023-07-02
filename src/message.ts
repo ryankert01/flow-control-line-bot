@@ -1,10 +1,12 @@
 function getEvacuationMessage(suggestions: any):any {
   let evac_image: string[] = [];
+  let evac_indexs: Number[] = [];
 
   for(var i = 0 ; i < 3 ; i++){
     switch(suggestions[i]){
       case "台北101/世貿捷運站":{
         evac_image.push("https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/101%20MRT%20station.png");// station picture url
+        evac_indexs.push(0); // push station id
         break;
       }
       case "台北君悅酒店巴士站":{
@@ -69,7 +71,7 @@ function getEvacuationMessage(suggestions: any):any {
               {
                 "type": "postback",
                 "label": "選擇",
-                "data": `[1] ${suggestions[0]}`
+                "data": `[${evac_indexs[0]}] ${suggestions[0]}`
               },
             ]
           },
@@ -87,7 +89,7 @@ function getEvacuationMessage(suggestions: any):any {
               {
                 "type": "postback",
                 "label": "選擇",
-                "data": `[2] ${suggestions[1]}`
+                "data": `[${evac_indexs[1]}] ${suggestions[1]}`
               },
             ]
           },
@@ -105,7 +107,7 @@ function getEvacuationMessage(suggestions: any):any {
                 {
                   "type": "postback",
                   "label": "選擇",
-                  "data": `[3] ${suggestions[2]}`
+                  "data": `[${evac_indexs[2]}] ${suggestions[2]}`
                 },
               ]
             }

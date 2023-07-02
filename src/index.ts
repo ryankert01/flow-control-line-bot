@@ -82,15 +82,15 @@ async function handleEvent(event: WebhookEvent) {
         await updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
         //console.log(getUser)
-        const preferred_place: number = getUser.prefered_place;
-        var getTraffic: Traffic | null = await prisma.traffic.findUnique({
+        const user_chose_place: number = getUser.chose_place;
+        var getPlace: Traffic | null = await prisma.places.findUnique({
           where: {
-            id: preferred_place,
+            id: user_chose_place,
           },
         });
-        if (getTraffic) {
-          const choose_place_name: string = getTraffic.name;
-          return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(preferred_place, chosen, choose_place_name));
+        if (getPlace) {
+          const choose_place_name: string = getPlace.name;
+          return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(user_chose_place, chosen, choose_place_name));
         }
       }
     }
