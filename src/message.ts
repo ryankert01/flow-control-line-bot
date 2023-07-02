@@ -81,7 +81,7 @@ function getEvacuationMessage(suggestions: any):any {
               {
                 "type": "postback",
                 "label": "選擇",
-                "data": `[${evac_indexs[0]}] ${suggestions[0]}`
+                "data": `[${evac_indexs[0].toString()}] ${suggestions[0]}`
               },
             ]
           },
@@ -99,7 +99,7 @@ function getEvacuationMessage(suggestions: any):any {
               {
                 "type": "postback",
                 "label": "選擇",
-                "data": `[${evac_indexs[1]}] ${suggestions[1]}`
+                "data": `[${evac_indexs[1].toString()}] ${suggestions[1]}`
               },
             ]
           },
@@ -117,7 +117,7 @@ function getEvacuationMessage(suggestions: any):any {
                 {
                   "type": "postback",
                   "label": "選擇",
-                  "data": `[${evac_indexs[2]}] ${suggestions[2]}`
+                  "data": `[${evac_indexs[2].toString()}] ${suggestions[2]}`
                 },
               ]
             }
