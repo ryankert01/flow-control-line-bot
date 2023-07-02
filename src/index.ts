@@ -88,8 +88,10 @@ async function handleEvent(event: WebhookEvent) {
           },
         });
         var user_chose_place: number = 0;
+        var location: number = 0;
         if(getUser) {
           user_chose_place = getUser.chose_place;
+          location = getUser.prefered_place;
         }
         var getPlace: Traffic | null = await prisma.places.findUnique({
           where: {
@@ -98,7 +100,7 @@ async function handleEvent(event: WebhookEvent) {
         });
         if (getPlace) {
           const choose_place_name: string = getPlace.name;
-          return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(user_chose_place, chosen, choose_place_name));
+          return client.replyMessage(event.replyToken, getChoosePlaceMapMessage(location, user_chose_place, choose_place_name));
         }
       }
     }
