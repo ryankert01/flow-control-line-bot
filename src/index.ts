@@ -82,7 +82,15 @@ async function handleEvent(event: WebhookEvent) {
         await updateUser2(lineUserId, chosen, prisma);
         console.log("update successful", chosen);
         //console.log(getUser)
-        const user_chose_place: number = getUser.chose_place;
+        getUser = await prisma.user.findUnique({
+          where: {
+            lineId: lineUserId,
+          },
+        });
+        var user_chose_place: number = 0;
+        if(getUser) {
+          user_chose_place = getUser.chose_place;
+        }
         var getPlace: Traffic | null = await prisma.places.findUnique({
           where: {
             id: user_chose_place,
