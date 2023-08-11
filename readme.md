@@ -11,7 +11,10 @@
 
 
 我們使用Metis作為數據驅動中樞，並以Metis透過API的形式來驅動我們在Railway的後端，根據存儲在PostgreSQL的用戶訊息發出line訊息給用戶，接收到用戶訊息再進行決策回朔，使人流不易發生重疊。
-![image](https://github.com/ryankert01/flow-control-line-bot/assets/91534261/6d3de266-7d68-4e4b-b52c-1238b44cc6e0)
+
+![photo_2023-08-11 14 14 18](https://github.com/ryankert01/flow-control-line-bot/assets/91534261/66a46d93-5877-463c-8463-a52fb6f5719b)
+![photo_2023-08-11 14 14 15](https://github.com/ryankert01/flow-control-line-bot/assets/91534261/6973758b-9c21-45c7-8809-d2542db800d0)
+
 
 
 
