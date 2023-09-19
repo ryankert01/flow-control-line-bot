@@ -18,7 +18,7 @@ function getEvacuationMessage(suggestions: any):any {
         evac_image.push("https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/101%E5%9C%8B%E9%9A%9B%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83.png");
         evac_indexs.push(3);
         break;
-      }
+      }//
       case "台北101公車站":{
         evac_image.push("https://raw.githubusercontent.com/ryankert01/flow-control-line-bot/main/map_pics/%E5%8F%B0%E5%8C%97101%E5%85%AC%E8%BB%8A%E7%AB%99.png");
         evac_indexs.push(4);
