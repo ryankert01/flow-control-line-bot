@@ -6,7 +6,7 @@
 系統在偵測到實時數據變動，例如人流、人群密度、災難發生等資訊，經由系統處理後判斷若為發生危險情況，驅動伺服器發送line預警訊息通知使用者，並在與使用者的互動中獲取使用者位置資訊以及使用者逃生偏好，以便基於使用者行為來發送逃生路線指引。
 
 
-### Data-Driven:
+### Data-Driven Parts:
 The system detects real-time data changes, such as pedestrian flow, crowd density, and disaster occurrences. After processing this information, it assesses whether a dangerous situation has occurred. If so, it triggers the server to send LINE warning messages to notify users. It also gathers user location information and escape preferences during interaction with users, to provide escape route guidance based on user behavior.
 
 ### 創新應用:	
@@ -19,7 +19,7 @@ The system detects real-time data changes, such as pedestrian flow, crowd densit
 
 我們使用Metis作為數據驅動中樞，並以Metis透過API的形式來驅動我們在Railway的後端，根據存儲在PostgreSQL的用戶訊息發出line訊息給用戶，接收到用戶訊息再進行決策回朔，使人流不易發生重疊。
 
-### Innovative Applications:
+### Innovative Parts:
 The current escape systems in large shopping malls have issues: 
 1. Escape routes are difficult to find.
 2. It is uncertain whether escape routes are safe during emergencies.
